@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { supabase } from "../lib/supabase"
-import "../styles/Dashboard.css"
+import "../styles/dashboard.css"
 import AddMatch from "../components/AddMatch"
 import StatsCharts from "../components/StatsCharts"
 
