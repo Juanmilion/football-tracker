@@ -4,22 +4,56 @@ import { supabase } from "../lib/supabase";
 
 export default function Auth() {
 
+    const [error, setError] = useState<string | null>(null)
+    const [success, setSuccess] = useState<string | null>(null)
+
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
     const signUp = async () => {
-        await supabase.auth.signUp({
+
+        setError(null)
+        setSuccess(null)
+
+        if (!email || !password) {
+            setError("Please fill in all fields")
+            return
+        }
+
+        const { error } = await supabase.auth.signUp({
             email,
             password,
-        });
-    };
+        })
+
+        if (error) {
+            setError(error.message)
+        } else {
+            setSuccess(
+                "Account created. Please check your email to confirm your account."
+            )
+        }
+    }
+
 
     const signIn = async () => {
-        await supabase.auth.signInWithPassword({
+
+        setError(null)
+        setSuccess(null)
+
+        if (!email || !password) {
+            setError("Please fill in all fields")
+            return
+        }
+
+        const { error } = await supabase.auth.signInWithPassword({
             email,
             password,
-        });
-    };
+        })
+
+        if (error) {
+            setError(error.message)
+        }
+    }
 
     return (
         <div className="auth-container">
@@ -48,6 +82,18 @@ export default function Auth() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                 />
+                
+                {error && (
+                    <div className="auth-error">
+                        {error}
+                    </div>
+                )}
+
+                {success && (
+                    <div className="auth-success">
+                        {success}
+                    </div>
+                )}
 
                 <div className="auth-buttons">
 

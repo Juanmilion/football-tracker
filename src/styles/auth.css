@@ -126,3 +126,24 @@ body {
     }
 
 }
+
+/* AUTH ERROR */
+.auth-error {
+    background: rgba(255, 0, 0, 0.15);
+    border: 1px solid #ff4d4d;
+    color: #ffb3b3;
+    padding: 0.6rem;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
+
+.auth-success {
+    background: rgba(0, 255, 120, 0.15);
+    border: 1px solid #00c853;
+    color: #a5f5c8;
+    padding: 0.6rem;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
