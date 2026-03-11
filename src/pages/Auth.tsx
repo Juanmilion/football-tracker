@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "../styles/Auth.css";
+import "../styles/auth.css";
 import { supabase } from "../lib/supabase";
 
 export default function Auth() {
@@ -82,7 +82,7 @@ export default function Auth() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                 />
-                
+
                 {error && (
                     <div className="auth-error">
                         {error}
