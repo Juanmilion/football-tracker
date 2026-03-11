@@ -5,7 +5,7 @@ import Dashboard from "./pages/Dashboard"
 
 function App() {
 
-  const DEV_MODE = true
+  const DEV_MODE = false
 
   const [session, setSession] = useState<any>(null)
 
