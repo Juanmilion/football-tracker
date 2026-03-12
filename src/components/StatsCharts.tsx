@@ -32,13 +32,18 @@ export default function StatsCharts() {
 
     const fetchData = async () => {
 
+        const { data: { user } } = await supabase.auth.getUser()
+
+        if (!user) return
+
         const { data, error } = await supabase
             .from("matches")
             .select(`
-                goals,
-                assists,
-                pitches(name)
-            `)
+            goals,
+            assists,
+            pitches(name)
+        `)
+            .eq("user_id", user.id)   // solo partidos del usuario logueado
 
         if (!error && data) {
             setData(data)

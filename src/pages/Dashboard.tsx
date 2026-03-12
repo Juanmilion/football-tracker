@@ -16,15 +16,20 @@ export default function Dashboard() {
 
     const fetchMatches = async () => {
 
+        const { data: { user } } = await supabase.auth.getUser()
+
+        if (!user) return
+
         const { data, error } = await supabase
             .from("matches")
             .select(`
-                id,
-                date,
-                goals,
-                assists,
-                pitches(name)
-            `)
+            id,
+            date,
+            goals,
+            assists,
+            pitches(name)
+        `)
+            .eq("user_id", user.id)   // ← FILTRO IMPORTANTE
             .order("date", { ascending: false })
 
         if (!error && data) {
