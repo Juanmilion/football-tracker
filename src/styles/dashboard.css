@@ -236,7 +236,10 @@ body {
 .charts {
     margin-top: 30px;
     display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: 25px;
+    width: 100%;
+    max-width: 900px;
 }
 
 .chart-card {
@@ -244,6 +247,12 @@ body {
     width: 100%;
     padding: 20px;
     border-radius: 10px;
+    max-width: 800px;
+    margin: auto;
+}
+
+.chart-card canvas {
+    max-height: 350px !important;
 }
 
 @media (max-width: 800px) {
