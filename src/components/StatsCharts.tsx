@@ -145,7 +145,11 @@ export default function StatsCharts() {
 
                 <h3>Goals per Pitch</h3>
 
-                <Bar data={goalsChart} />
+                <Bar data={goalsChart}
+                    options={{
+                        responsive: true,
+                        maintainAspectRatio: false,
+                    }} />
 
             </div>
 
@@ -153,7 +157,10 @@ export default function StatsCharts() {
 
                 <h3>Assists per Pitch</h3>
 
-                <Bar data={assistsChart} />
+                <Bar data={assistsChart} options={{
+                    responsive: true,
+                    maintainAspectRatio: false,
+                }} />
 
             </div>
 
@@ -161,7 +168,10 @@ export default function StatsCharts() {
 
                 <h3>Goal Contribution %</h3>
 
-                <Doughnut data={contributionChart} />
+                <Doughnut data={contributionChart} options={{
+                    responsive: true,
+                    maintainAspectRatio: false,
+                }} />
 
             </div>
 
@@ -169,7 +179,10 @@ export default function StatsCharts() {
 
                 <h3>Best Pitch Ranking</h3>
 
-                <Bar data={bestPitchChart} />
+                <Bar data={bestPitchChart} options={{
+                    responsive: true,
+                    maintainAspectRatio: false,
+                }} />
 
             </div>
 
