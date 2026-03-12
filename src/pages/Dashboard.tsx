@@ -32,6 +32,11 @@ export default function Dashboard() {
         }
     }
 
+    const logout = async () => {
+        await supabase.auth.signOut()
+        window.location.reload()
+    }
+
     const totalMatches = matches.length
     const totalGoals = matches.reduce((sum, m) => sum + m.goals, 0)
     const totalAssists = matches.reduce((sum, m) => sum + m.assists, 0)
@@ -50,6 +55,13 @@ export default function Dashboard() {
             <header className="dashboard-header">
 
                 <h1>⚽ Football Tracker</h1>
+
+                <button
+                    className="logout-btn"
+                    onClick={logout}
+                >
+                    Logout ↩
+                </button>
 
                 <div className="stats">
 

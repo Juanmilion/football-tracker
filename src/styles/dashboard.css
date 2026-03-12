@@ -257,3 +257,41 @@ body {
     text-align: center;
     margin-bottom: 10px;
 }
+
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logout-btn {
+    background: #ff5252;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    color: white;
+    cursor: pointer;
+}
+
+.logout-btn:hover {
+    background: #e53935;
+}
+
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logout-btn {
+    background: #ff5252;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    color: white;
+    cursor: pointer;
+}
+
+.logout-btn:hover {
+    background: #e53935;
+}
