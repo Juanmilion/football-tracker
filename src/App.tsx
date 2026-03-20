@@ -5,10 +5,12 @@ import Home from "./pages/Home"
 import Add from "./pages/Add"
 import Stats from "./pages/Stats"
 import Auth from "./pages/Auth"
+import Navbar from "./components/Navbar"
 
 export default function App() {
   return (
     <BrowserRouter>
+      <Navbar />
       <Routes>
 
         {/* Pública */}
