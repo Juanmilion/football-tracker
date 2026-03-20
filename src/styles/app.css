@@ -26,11 +26,11 @@ body {
 
 /* LAYOUT */
 .container {
-    text-align: center;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: flex-start;
+    /* importante */
     padding: 20px 16px 100px;
     max-width: 500px;
     margin: 0 auto;
@@ -38,6 +38,11 @@ body {
 
 .content-top {
     text-align: center;
+    margin-top: 40px;
+}
+
+.content-middle {
+    margin-top: 30px;
 }
 
 /* TITLES */
@@ -168,7 +173,8 @@ h1 {
     display: flex;
     gap: 10px;
 }
-.save-btn{
+
+.save-btn {
     margin-top: 20px;
     background: var(--primary);
     color: black;
