@@ -10,7 +10,7 @@ export default function Stats() {
     const [matches, setMatches] = useState<any[]>([])
     const insights = calculateInsights(matches)
     const recentPerformance = getRecentPerformance(matches)
-    const averageRating = calculateAverageRating(matches)
+    // const averageRating = calculateAverageRating(matches)
 
     useEffect(() => {
         fetchMatches()

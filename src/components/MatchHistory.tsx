@@ -1,5 +1,4 @@
 import { calculateMatchRating } from "../lib/stats"
-import { useState } from "react"
 
 export default function MatchHistory({ matches }: any) {
 

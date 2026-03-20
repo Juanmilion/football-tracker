@@ -22,8 +22,8 @@ export function calculateAverageRating(matches: any[]) {
 }
 
 export function calculateScore(matches: any[]) {
-    const totalGoals = matches.reduce((sum, m) => sum + m.goals, 0)
-    const totalAssists = matches.reduce((sum, m) => sum + m.assists, 0)
+    // const totalGoals = matches.reduce((sum, m) => sum + m.goals, 0)
+    // const totalAssists = matches.reduce((sum, m) => sum + m.assists, 0)
     // 🔢 SCORE (acumulativo)
     let score = 0
 
@@ -43,7 +43,13 @@ export function calculateInsights(matches: any[]) {
     let bestMatch = null
     let bestRating = -1
 
-    const pitchStats: any = {}
+    type PitchStats = {
+        goals: number
+        assists: number
+        contributions: number
+    }
+
+    const pitchStats: Record<string, PitchStats> = {}
 
     matches.forEach(m => {
 
@@ -72,11 +78,11 @@ export function calculateInsights(matches: any[]) {
         pitchStats[pitch].contributions += contributions
     })
 
-    const getTop = (key: string) => {
+    const getTop = (key: keyof PitchStats) => {
 
-        const sorted = Object.entries(pitchStats).sort((a: any, b: any) => {
-            return b[1][key] - a[1][key]
-        })
+        const sorted = Object.entries(pitchStats).sort(
+            ([, a], [, b]) => b[key] - a[key]
+        )
 
         if (!sorted[0]) return { name: "-", value: 0 }
 
@@ -124,7 +130,7 @@ export function getRecentPerformance(matches: any[]) {
         if (r < 8.5) return "👍 Good form"
         return "🔥 On fire"
     }
-    
+
     return {
         avg: Number(avg.toFixed(1)),
         trend: Number(trend.toFixed(1)),

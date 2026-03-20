@@ -10,7 +10,7 @@ import {
     Legend
 } from "chart.js"
 
-import { Bar, Doughnut } from "react-chartjs-2"
+import { Bar } from "react-chartjs-2"
 
 ChartJS.register(
     CategoryScale,
@@ -43,37 +43,37 @@ export default function StatsCharts({ data }: any) {
         totalAssists += m.assists
     })
 
-    const goalsChart = {
-        labels: Object.keys(goalsPerPitch),
-        datasets: [
-            {
-                label: "Goals",
-                data: Object.values(goalsPerPitch),
-                backgroundColor: "#00c853"
-            }
-        ]
-    }
+    // const goalsChart = {
+    //     labels: Object.keys(goalsPerPitch),
+    //     datasets: [
+    //         {
+    //             label: "Goals",
+    //             data: Object.values(goalsPerPitch),
+    //             backgroundColor: "#00c853"
+    //         }
+    //     ]
+    // }
 
-    const assistsChart = {
-        labels: Object.keys(assistsPerPitch),
-        datasets: [
-            {
-                label: "Assists",
-                data: Object.values(assistsPerPitch),
-                backgroundColor: "#2962ff"
-            }
-        ]
-    }
+    // const assistsChart = {
+    //     labels: Object.keys(assistsPerPitch),
+    //     datasets: [
+    //         {
+    //             label: "Assists",
+    //             data: Object.values(assistsPerPitch),
+    //             backgroundColor: "#2962ff"
+    //         }
+    //     ]
+    // }
 
-    const contributionChart = {
-        labels: ["Goals", "Assists"],
-        datasets: [
-            {
-                data: [totalGoals, totalAssists],
-                backgroundColor: ["#00c853", "#2962ff"]
-            }
-        ]
-    }
+    // const contributionChart = {
+    //     labels: ["Goals", "Assists"],
+    //     datasets: [
+    //         {
+    //             data: [totalGoals, totalAssists],
+    //             backgroundColor: ["#00c853", "#2962ff"]
+    //         }
+    //     ]
+    // }
 
     const pitchContribution: any = {}
 
