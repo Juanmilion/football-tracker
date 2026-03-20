@@ -3,27 +3,18 @@
 body {
     margin: 0;
     font-family: system-ui, sans-serif;
-
-    background: linear-gradient(rgba(0, 0, 0, 0.75),
-            rgba(0, 0, 0, 0.85)),
-        url("https://images.unsplash.com/photo-1508098682722-e99c43a406b2");
-
-    background-size: cover;
-    background-position: center;
-
+    background: linear-gradient(...);
     min-height: 100vh;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
 
 /* ===== AUTH CONTAINER ===== */
 
 .auth-container {
-    width: 100%;
-    max-width: 420px;
-    padding: 2rem;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
 }
 
 /* ===== CARD ===== */
