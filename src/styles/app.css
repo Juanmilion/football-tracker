@@ -17,6 +17,7 @@
 
 /* BASE */
 body {
+    width: 100%;
     background: var(--bg);
     font-family: system-ui, -apple-system, sans-serif;
     color: var(--text);
@@ -151,6 +152,7 @@ h1 {
     display: flex;
     flex-direction: column;
     gap: 6px;
+    margin-top: 5px;
 }
 
 .form-group input,
@@ -165,6 +167,16 @@ h1 {
 .form-row {
     display: flex;
     gap: 10px;
+}
+.save-btn{
+    margin-top: 20px;
+    background: var(--primary);
+    color: black;
+    font-weight: bold;
+    font-size: 1rem;
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
 }
 
 /* TABLE (mobile fix clave) */
