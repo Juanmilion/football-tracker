@@ -60,7 +60,7 @@ export default function Home() {
                 </div>
 
                 <div className="stat-card">
-                    <h3>{totalMatches > 0 ? (totalGoals + totalAssists) / totalMatches : 0}</h3>
+                    {totalMatches > 0 ? ((totalGoals + totalAssists) / totalMatches).toFixed(2) : 0}</h3>
                     <p>G/A per Match</p>
                 </div>
 
