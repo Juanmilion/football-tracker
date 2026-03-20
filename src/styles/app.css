@@ -1,0 +1,174 @@
+/* RESET */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* VARIABLES */
+:root {
+    --bg: #050805;
+    --card: #121a14;
+    --primary: #00c853;
+    --blue: #2962ff;
+    --text: #e8f5e9;
+    --muted: #9e9e9e;
+}
+
+/* BASE */
+body {
+    background: var(--bg);
+    font-family: system-ui, -apple-system, sans-serif;
+    color: var(--text);
+}
+
+/* LAYOUT */
+.container {
+    padding: 16px;
+    padding-bottom: 80px;
+    /* espacio navbar */
+}
+
+/* TITLES */
+h1 {
+    font-size: 1.5rem;
+    margin-bottom: 16px;
+    color: var(--primary);
+}
+
+/* CARDS */
+.card {
+    background: var(--card);
+    border-radius: 14px;
+    padding: 16px;
+}
+
+/* STATS GRID */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.stat-card {
+    text-align: center;
+}
+
+.stat-card h3 {
+    font-size: 1.4rem;
+    color: var(--primary);
+}
+
+.stat-card p {
+    font-size: 0.8rem;
+    color: var(--muted);
+}
+
+/* BUTTONS */
+.btn {
+    padding: 14px;
+    border-radius: 10px;
+    border: none;
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: black;
+}
+
+.btn-blue {
+    background: var(--blue);
+    color: white;
+}
+
+/* FORM */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.form-group input,
+.form-group select {
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    background: #1f2a22;
+    color: white;
+}
+
+.form-row {
+    display: flex;
+    gap: 10px;
+}
+
+/* TABLE (mobile fix clave) */
+.table-container {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    min-width: 400px;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    padding: 10px;
+    text-align: center;
+}
+
+thead {
+    background: #1f2a22;
+}
+
+/* CHARTS */
+.chart-card {
+    height: 250px;
+}
+
+/* FAB */
+.fab {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--primary);
+    color: black;
+    font-size: 28px;
+    border: none;
+}
+
+/* NAVBAR */
+.navbar {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background: var(--card);
+    display: flex;
+    justify-content: space-around;
+    padding: 12px;
+}
+
+/* DESKTOP */
+@media (min-width: 768px) {
+
+    .container {
+        max-width: 900px;
+        margin: auto;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .chart-card {
+        height: 300px;
+    }
+
+}
