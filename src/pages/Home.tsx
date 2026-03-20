@@ -5,7 +5,9 @@ import FloatingButton from "../components/FloatingButton"
 import "../styles/app.css"
 import { FiLogOut } from "react-icons/fi"
 import Title from "../components/Title"
-import { calculateStats, calculateRatingWithTrend } from "../lib/stats"
+import { calculateAverageRating } from "../lib/stats"
+import { calculateMatchRating } from "../lib/stats"
+import { calculateScore } from "../lib/stats"
 import StatDisplay from "../components/StatsDisplay"
 
 export default function Home() {
@@ -41,9 +43,13 @@ export default function Home() {
 
     const lastMatch = matches[0]
 
-    const { score, rating } = calculateStats(matches)
-    const { trend } = calculateRatingWithTrend(matches)
+    const rating = calculateAverageRating(matches)
+    // const trend = lastMatch ? Math.round((calculateMatchRating(lastMatch.goals, lastMatch.assists) - rating) * 10) / 10 : 0
+    const lastMatchRating = lastMatch
+        ? calculateMatchRating(lastMatch.goals, lastMatch.assists)
+        : 0
 
+    const score = calculateScore(matches)
     return (
         <div className="container">
             <Title />
@@ -62,11 +68,11 @@ export default function Home() {
                         <h2>
                             <StatDisplay value={Number(rating)} />
                         </h2>
-                        <div className="trend">
-                            {trend > 0 && <span className="up">↑ +{trend.toFixed(1)}</span>}
-                            {trend < 0 && <span className="down">↓ {trend.toFixed(1)}</span>}
+                        {/* <div className="trend">
+                            {trend > 0 && <span className="up">↑ +{trend}</span>}
+                            {trend < 0 && <span className="down">↓ {trend}</span>}
                             {trend === 0 && <span className="same">—</span>}
-                        </div>
+                        </div> */}
                     </div>
 
                 </div>
@@ -123,6 +129,11 @@ export default function Home() {
                                 <span className="stat-value">{lastMatch.assists}</span>
                                 <span className="stat-label">Assists</span>
                             </div>
+
+                            <div className="stat">
+                                <span className="stat-value">{lastMatchRating}</span>
+                                <span className="stat-label">Rating</span>
+                            </div>
                         </div>
 
                     </div>
@@ -131,7 +142,9 @@ export default function Home() {
             <button className="logout-btn" onClick={logout}>
                 <FiLogOut />
             </button>
+            
             <FloatingButton onClick={() => navigate("/add")} />
         </div>
+        
     )
 }

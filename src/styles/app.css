@@ -228,7 +228,7 @@ thead {
     height: 250px;
     padding-bottom: 10px;
     padding-top: 10px;
-    margin-top: 15px;
+    margin-bottom: 45px;
 }
 
 /* NAVBAR */
@@ -359,18 +359,119 @@ thead {
 }
 
 .trend {
-  font-size: 0.9rem;
-  margin-top: 4px;
+    font-size: 0.9rem;
+    margin-top: 4px;
 }
 
 .trend .up {
-  color: #00c853;
+    color: #00c853;
 }
 
 .trend .down {
-  color: #ff5252;
+    color: #ff5252;
 }
 
 .trend .same {
-  color: var(--muted);
+    color: var(--muted);
+}
+
+.match-history {
+    margin-top: 20px;
+    margin-bottom: 35px;
+}
+
+.match-history table {
+    margin-top: 10px;
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--card);
+}
+
+/* HEADER */
+.match-history thead {
+    background: #1f2a22;
+}
+
+.match-history th {
+    padding: 12px;
+    font-size: 0.8rem;
+    color: var(--muted);
+    text-transform: uppercase;
+}
+
+/* FILAS */
+.match-history td {
+    padding: 12px;
+    font-size: 0.95rem;
+}
+
+/* separador suave */
+.match-history tbody tr {
+    border-bottom: 1px solid #1f2a22;
+}
+
+/* hover (desktop) */
+.match-history tbody tr:hover {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.insights {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.insight-card {
+    background: var(--card);
+    padding: 14px;
+    border-radius: 12px;
+}
+
+.insight-card p {
+    font-size: 0.8rem;
+    color: var(--muted);
+}
+
+.insight-card h3 {
+    font-size: 1.2rem;
+    margin-top: 4px;
+}
+
+.insight-card span {
+    font-size: 0.8rem;
+    color: var(--muted);
+}
+
+.big-rating {
+    font-size: 4rem;
+    font-weight: bold;
+    color: var(--primary);
+}
+
+.performance-header h2 {
+    font-size: 1rem;
+}
+
+.pitch-stats {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 8px;
+}
+
+.pitch-stats span {
+    font-weight: bold;
+}
+
+.insight-card.best {
+    border: 1px solid rgba(0, 200, 83, 0.3);
+    box-shadow: 0 0 10px rgba(0, 200, 83, 0.15);
+}
+
+.safe-trend {
+    font-size: 0.9rem;
+    opacity: 0.9;
 }

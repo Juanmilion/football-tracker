@@ -1,5 +1,3 @@
-import { useEffect, useState } from "react"
-import { supabase } from "../lib/supabase"
 import "../styles/app.css"
 
 import {
@@ -23,34 +21,7 @@ ChartJS.register(
     Legend
 )
 
-export default function StatsCharts() {
-
-    const [data, setData] = useState<any[]>([])
-
-    useEffect(() => {
-        fetchData()
-    }, [])
-
-    const fetchData = async () => {
-
-        const { data: { user } } = await supabase.auth.getUser()
-
-        if (!user) return
-
-        const { data, error } = await supabase
-            .from("matches")
-            .select(`
-            goals,
-            assists,
-            pitches(name)
-        `)
-            .eq("user_id", user.id)   // solo partidos del usuario logueado
-
-        if (!error && data) {
-            setData(data)
-        }
-
-    }
+export default function StatsCharts({ data }: any) {
 
     const goalsPerPitch: any = {}
     const assistsPerPitch: any = {}
@@ -58,7 +29,7 @@ export default function StatsCharts() {
     let totalGoals = 0
     let totalAssists = 0
 
-    data.forEach((m) => {
+    data.forEach((m: any) => {
 
         const pitch = m.pitches?.name || "Unknown"
 
@@ -72,8 +43,6 @@ export default function StatsCharts() {
         totalAssists += m.assists
     })
 
-    // GOALS PER PITCH
-
     const goalsChart = {
         labels: Object.keys(goalsPerPitch),
         datasets: [
@@ -84,8 +53,6 @@ export default function StatsCharts() {
             }
         ]
     }
-
-    // ASSISTS PER PITCH
 
     const assistsChart = {
         labels: Object.keys(assistsPerPitch),
@@ -98,27 +65,19 @@ export default function StatsCharts() {
         ]
     }
 
-    // GOAL CONTRIBUTION %
-
     const contributionChart = {
         labels: ["Goals", "Assists"],
         datasets: [
             {
                 data: [totalGoals, totalAssists],
-                backgroundColor: [
-                    "#00c853",
-                    "#2962ff"
-                ]
+                backgroundColor: ["#00c853", "#2962ff"]
             }
         ]
     }
 
-    // BEST PITCH RANKING (goals + assists)
-
     const pitchContribution: any = {}
 
-    data.forEach((m) => {
-
+    data.forEach((m: any) => {
         const pitch = m.pitches?.name || "Unknown"
 
         pitchContribution[pitch] =
@@ -141,52 +100,10 @@ export default function StatsCharts() {
     return (
 
         <div className="charts">
-
             <div className="chart-card">
-
-                <h3>Goals per Pitch</h3>
-
-                <Bar data={goalsChart}
-                    options={{
-                        responsive: true,
-                        maintainAspectRatio: false,
-                    }} />
-
-            </div>
-
-            <div className="chart-card">
-
-                <h3>Assists per Pitch</h3>
-
-                <Bar data={assistsChart} options={{
-                    responsive: true,
-                    maintainAspectRatio: false,
-                }} />
-
-            </div>
-
-            <div className="chart-card">
-
-                <h3>Goal Contribution %</h3>
-
-                <Doughnut data={contributionChart} options={{
-                    responsive: true,
-                    maintainAspectRatio: false,
-                }} />
-
-            </div>
-
-            <div className="chart-card">
-
                 <h3>Best Pitch Ranking</h3>
-
-                <Bar data={bestPitchChart} options={{
-                    responsive: true,
-                    maintainAspectRatio: false,
-                }} />
-
+                <Bar data={bestPitchChart} options={{ responsive: true, maintainAspectRatio: false }} />
             </div>
-
         </div>
     )
 }

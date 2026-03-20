@@ -1,59 +1,133 @@
-export function calculateStats(matches: any[]) {
+export function calculateMatchRating(goals: number, assists: number) {
 
-    if (matches.length === 0) {
-        return { score: 0, rating: 0 }
-    }
+    const contributions = goals + assists
 
-    let score = 0
-    let totalContributions = 0
-
-    matches.forEach(m => {
-        score += (m.goals * 5) + (m.assists * 3)
-        totalContributions += m.goals + m.assists
-    })
-
-    const cpm = totalContributions / matches.length
-
-    // 🔥 ajuste realista para fútbol sala
-    let rating = cpm * 1.7
+    // 🔥 fórmula ajustada fútbol sala
+    let rating = contributions * 1.8
 
     rating = Math.min(10, rating)
 
+    return Number(rating.toFixed(1))
+}
+
+export function calculateAverageRating(matches: any[]) {
+
+    if (matches.length === 0) return 0
+
+    const total = matches.reduce((sum, m) => {
+        return sum + calculateMatchRating(m.goals, m.assists)
+    }, 0)
+
+    return Number((total / matches.length).toFixed(1))
+}
+
+export function calculateScore(matches: any[]) {
+    const totalGoals = matches.reduce((sum, m) => sum + m.goals, 0)
+    const totalAssists = matches.reduce((sum, m) => sum + m.assists, 0)
+    // 🔢 SCORE (acumulativo)
+    let score = 0
+
+    matches.forEach(m => {
+        score += (m.goals * 5) + (m.assists * 3)
+    })
+
+    return score
+}
+
+export function calculateInsights(matches: any[]) {
+
+    if (matches.length === 0) {
+        return null
+    }
+
+    let bestMatch = null
+    let bestRating = -1
+
+    const pitchStats: any = {}
+
+    matches.forEach(m => {
+
+        const contributions = m.goals + m.assists
+
+        const rating = Math.min(10, contributions * 1.8)
+
+        // 🥇 mejor partido
+        if (rating > bestRating) {
+            bestRating = rating
+            bestMatch = { ...m, rating }
+        }
+
+        const pitch = m.pitches?.name || "Unknown"
+
+        if (!pitchStats[pitch]) {
+            pitchStats[pitch] = {
+                goals: 0,
+                assists: 0,
+                contributions: 0
+            }
+        }
+
+        pitchStats[pitch].goals += m.goals
+        pitchStats[pitch].assists += m.assists
+        pitchStats[pitch].contributions += contributions
+    })
+
+    const getTop = (key: string) => {
+
+        const sorted = Object.entries(pitchStats).sort((a: any, b: any) => {
+            return b[1][key] - a[1][key]
+        })
+
+        if (!sorted[0]) return { name: "-", value: 0 }
+
+        return {
+            name: sorted[0][0],
+            value: sorted[0][1][key]
+        }
+    }
+
     return {
-        score,
-        rating: Number(rating.toFixed(1))
+        bestMatch,
+        bestPitchGoals: getTop("goals"),
+        bestPitchAssists: getTop("assists"),
+        bestPitchContribution: getTop("contributions")
     }
 }
 
-export function calculateRatingWithTrend(matches: any[]) {
+export function getRecentPerformance(matches: any[]) {
 
-    if (matches.length === 0) {
-        return { rating: 0, trend: 0 }
+    if (matches.length === 0) return null
+
+    const calculateMatchRating = (g: number, a: number) => {
+        return Math.min(10, (g + a) * 1.8)
     }
 
-    const calc = (list: any[]) => {
-        let total = 0
+    // 🔥 últimos 3 partidos
+    const recent = matches.slice(0, 3)
 
-        list.forEach(m => {
-            total += m.goals + m.assists
-        })
+    const ratings = recent.map(m =>
+        calculateMatchRating(m.goals, m.assists)
+    )
 
-        const cpm = total / list.length
-        return Math.min(10, cpm * 1.7)
+    const avg =
+        ratings.reduce((a, b) => a + b, 0) / ratings.length
+
+    // 📈 tendencia simple (último vs anterior)
+    let trend = 0
+    if (ratings.length > 1) {
+        trend = ratings[0] - ratings[1]
     }
 
-    const current = calc(matches)
-
-    if (matches.length === 1) {
-        return { rating: current, trend: 0 }
+    const getLabel = (r: number) => {
+        if (r < 5) return "📉 Bad form"
+        if (r < 7) return "😐 Average"
+        if (r < 8.5) return "👍 Good form"
+        return "🔥 On fire"
     }
-
-    const previous = calc(matches.slice(1)) // sin último partido
-
-    const trend = current - previous
-
+    
     return {
-        rating: Number(current.toFixed(1)),
-        trend: Number(trend.toFixed(2))
+        avg: Number(avg.toFixed(1)),
+        trend: Number(trend.toFixed(1)),
+        label: getLabel(avg)
     }
 }
