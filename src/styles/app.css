@@ -22,12 +22,6 @@ body {
     color: var(--text);
 }
 
-body,
-html,
-#root {
-    height: 100%;
-}
-
 /* LAYOUT */
 .container {
     padding: 16px;
