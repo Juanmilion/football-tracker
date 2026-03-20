@@ -129,6 +129,8 @@ thead {
 /* CHARTS */
 .chart-card {
     height: 250px;
+    padding-bottom: 10px;
+    padding-top: 10px;
 }
 
 /* FAB */
