@@ -1,9 +1,23 @@
 .navbar {
     position: fixed;
     bottom: 0;
+    left: 0;
     width: 100%;
-    background: #121a14;
+
+    background: var(--card);
     display: flex;
     justify-content: space-around;
-    padding: 12px;
+    align-items: center;
+
+    padding: 12px 0 calc(12px + env(safe-area-inset-bottom));
+    z-index: 1000;
+}
+
+.navbar a {
+    color: var(--muted);
+    font-size: 20px;
+}
+
+.navbar a.active {
+    color: var(--primary);
 }
