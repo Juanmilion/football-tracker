@@ -34,62 +34,66 @@ export default function Home() {
 
     return (
         <div className="container">
+            <div className="content-top">
+                <h1>⚽ Football Tracker</h1>
 
-            <h1>⚽ Football Tracker</h1>
+                <div className="stats">
 
-            <div className="stats">
+                    <div className="stat-card">
+                        <h3>{totalMatches}</h3>
+                        <p>Matches</p>
+                    </div>
 
-                <div className="stat-card">
-                    <h3>{totalMatches}</h3>
-                    <p>Matches</p>
+                    <div className="stat-card">
+                        <h3>{totalGoals}</h3>
+                        <p>Goals</p>
+                    </div>
+
+                    <div className="stat-card">
+                        <h3>{totalAssists}</h3>
+                        <p>Assists</p>
+                    </div>
+
+                    <div className="stat-card">
+                        <h3>{totalGoals + totalAssists}</h3>
+                        <p>G/A</p>
+                    </div>
+
+                    <div className="stat-card">
+                        <h3>{totalMatches > 0 ? ((totalGoals + totalAssists) / totalMatches).toFixed(2) : 0}</h3>
+                        <p>G/A per Match</p>
+                    </div>
+
                 </div>
-
-                <div className="stat-card">
-                    <h3>{totalGoals}</h3>
-                    <p>Goals</p>
-                </div>
-
-                <div className="stat-card">
-                    <h3>{totalAssists}</h3>
-                    <p>Assists</p>
-                </div>
-
-                <div className="stat-card">
-                    <h3>{totalGoals + totalAssists}</h3>
-                    <p>G/A</p>
-                </div>
-
-                <div className="stat-card">
-                    <h3>{totalMatches > 0 ? ((totalGoals + totalAssists) / totalMatches).toFixed(2) : 0}</h3>
-                    <p>G/A per Match</p>
-                </div>
-
             </div>
 
-            {lastMatch && (
-                <div className="card last-match">
+            <div className="content-middle">
 
-                    <div className="last-match-header">
-                        <span>Last Match</span>
-                        <span className="match-date">{lastMatch.date}</span>
-                    </div>
+                {lastMatch && (
+                    <div className="card last-match">
 
-                    <div className="last-match-stats">
-                        <div className="stat">
-                            <span className="stat-value">{lastMatch.goals}</span>
-                            <span className="stat-label">Goals</span>
+                        <div className="last-match-header">
+                            <span>Last Match</span>
+                            <span className="match-date">{lastMatch.date}</span>
                         </div>
 
-                        <div className="divider"></div>
+                        <div className="last-match-stats">
+                            <div className="stat">
+                                <span className="stat-value">{lastMatch.goals}</span>
+                                <span className="stat-label">Goals</span>
+                            </div>
 
-                        <div className="stat">
-                            <span className="stat-value">{lastMatch.assists}</span>
-                            <span className="stat-label">Assists</span>
+                            <div className="divider"></div>
+
+                            <div className="stat">
+                                <span className="stat-value">{lastMatch.assists}</span>
+                                <span className="stat-label">Assists</span>
+                            </div>
                         </div>
-                    </div>
 
-                </div>
-            )}
+                    </div>
+                )}
+            </div>
 
             <FloatingButton onClick={() => navigate("/add")} />
 
