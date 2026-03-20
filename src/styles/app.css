@@ -266,7 +266,7 @@ thead {
 }
 
 /* LOGOUT BUTTON */
-.logout-btn {
+/* .logout-btn {
     background: transparent;
     border: none;
     display: flex;
@@ -288,4 +288,4 @@ thead {
 
 .logout-btn:hover {
     background: rgba(255, 255, 255, 0.08);
-}
+} */
