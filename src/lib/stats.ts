@@ -1,3 +1,20 @@
+type Match = {
+    id: number
+    date: string
+    goals: number
+    assists: number
+    pitches?: {
+        name: string
+    }
+}
+
+type Insights = {
+    bestMatch: (Match & { rating: number }) | null
+    bestPitchGoals: { name: string, value: number }
+    bestPitchAssists: { name: string, value: number }
+    bestPitchContribution: { name: string, value: number }
+}
+
 export function calculateMatchRating(goals: number, assists: number) {
 
     const contributions = goals + assists
@@ -10,7 +27,7 @@ export function calculateMatchRating(goals: number, assists: number) {
     return Number(rating.toFixed(1))
 }
 
-export function calculateAverageRating(matches: any[]) {
+export function calculateAverageRating(matches: Match[]) {
 
     if (matches.length === 0) return 0
 
@@ -21,7 +38,7 @@ export function calculateAverageRating(matches: any[]) {
     return Number((total / matches.length).toFixed(1))
 }
 
-export function calculateScore(matches: any[]) {
+export function calculateScore(matches: Match[]) {
     // const totalGoals = matches.reduce((sum, m) => sum + m.goals, 0)
     // const totalAssists = matches.reduce((sum, m) => sum + m.assists, 0)
     // 🔢 SCORE (acumulativo)
@@ -34,13 +51,13 @@ export function calculateScore(matches: any[]) {
     return score
 }
 
-export function calculateInsights(matches: any[]) {
+export function calculateInsights(matches: Match[]): Insights | null {
 
     if (matches.length === 0) {
         return null
     }
 
-    let bestMatch = null
+    let bestMatch: (Match & { rating: number }) | null = null
     let bestRating = -1
 
     type PitchStats = {
@@ -100,7 +117,7 @@ export function calculateInsights(matches: any[]) {
     }
 }
 
-export function getRecentPerformance(matches: any[]) {
+export function getRecentPerformance(matches: Match[]) {
 
     if (matches.length === 0) return null
 

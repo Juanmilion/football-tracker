@@ -3,7 +3,7 @@ import Title from "../components/Title"
 import MatchHistory from "../components/MatchHistory"
 import { useEffect, useState } from "react"
 import { supabase } from "../lib/supabase"
-import { calculateInsights, calculateAverageRating, getRecentPerformance } from "../lib/stats"
+import { calculateInsights, getRecentPerformance } from "../lib/stats"
 
 export default function Stats() {
 
@@ -71,15 +71,22 @@ export default function Stats() {
 
                 <div className="insights">
 
-                    <div className="insight-card">
-                        <p>Best Match</p>
-                        <h3>
-                            ⚽ {insights.bestMatch.goals} | 🎯 {insights.bestMatch.assists}
-                        </h3>
-                        <span>Rating: {insights.bestMatch.rating}</span>
-                        <p>{insights.bestMatch.pitches.name}</p>
-                        <p>{insights.bestMatch.date}</p>
-                    </div>
+                    {insights.bestMatch && (
+
+                        <div className="insight-card">
+                            <p>Best Match</p>
+
+                            <h3>
+                                ⚽ {insights.bestMatch.goals} | 🎯 {insights.bestMatch.assists}
+                            </h3>
+
+                            <span>Rating: {insights.bestMatch.rating}</span>
+
+                            <p>{insights.bestMatch.pitches?.name}</p>
+                            <p>{insights.bestMatch.date}</p>
+                        </div>
+
+                    )}
 
                     <div className="insight-card best">
 
