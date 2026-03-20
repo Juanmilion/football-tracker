@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom"
 import FloatingButton from "../components/FloatingButton"
 import "../styles/app.css"
 import { FiLogOut } from "react-icons/fi"
+import { color } from "chart.js/helpers"
 
 export default function Home() {
 
@@ -44,7 +45,7 @@ export default function Home() {
                 <h1>⚽ Football Tracker</h1>
 
                 <button className="logout-btn" onClick={logout}>
-                    <FiLogOut /> 
+                    <FiLogOut />
                 </button>
 
                 <div className="stats">
@@ -105,7 +106,7 @@ export default function Home() {
                 )}
             </div>
 
-            <FloatingButton onClick={() => navigate("/add")} />
+            <FloatingButton className="fab" onClick={() => navigate("/add")} />
 
         </div>
     )
