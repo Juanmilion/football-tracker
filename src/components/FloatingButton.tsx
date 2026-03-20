@@ -1,4 +1,4 @@
-import "./floating.css"
+import "../styles/floating.css"
 
 export default function FloatingButton({ onClick }: any) {
     return (

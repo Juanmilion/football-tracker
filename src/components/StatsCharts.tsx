@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { supabase } from "../lib/supabase"
+import "../styles/app.css"
 
 import {
     Chart as ChartJS,
