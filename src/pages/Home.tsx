@@ -57,10 +57,27 @@ export default function Home() {
             </div>
 
             {lastMatch && (
-                <div className="match-card">
-                    <h3>Last Match</h3>
-                    <p>{lastMatch.date}</p>
-                    <p>⚽ {lastMatch.goals} | 🎯 {lastMatch.assists}</p>
+                <div className="card last-match">
+
+                    <div className="last-match-header">
+                        <span>Last Match</span>
+                        <span className="match-date">{lastMatch.date}</span>
+                    </div>
+
+                    <div className="last-match-stats">
+                        <div className="stat">
+                            <span className="stat-value">{lastMatch.goals}</span>
+                            <span className="stat-label">Goals</span>
+                        </div>
+
+                        <div className="divider"></div>
+
+                        <div className="stat">
+                            <span className="stat-value">{lastMatch.assists}</span>
+                            <span className="stat-label">Assists</span>
+                        </div>
+                    </div>
+
                 </div>
             )}
 

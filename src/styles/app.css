@@ -45,8 +45,54 @@ h1 {
 }
 
 /* LAST MATCH */
-.match-card {
-    margin-top: 15px;
+.last-match {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* HEADER */
+.last-match-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    color: var(--muted);
+}
+
+.match-date {
+    font-size: 0.8rem;
+}
+
+/* STATS */
+.last-match-stats {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+/* INDIVIDUAL STAT */
+.stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.stat-value {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: var(--primary);
+}
+
+.stat-label {
+    font-size: 0.75rem;
+    color: var(--muted);
+}
+
+/* DIVIDER */
+.divider {
+    width: 1px;
+    height: 40px;
+    background: #1f2a22;
 }
 
 /* STATS GRID */
