@@ -3,11 +3,17 @@ import { supabase } from "../lib/supabase"
 import { useNavigate } from "react-router-dom"
 import FloatingButton from "../components/FloatingButton"
 import "../styles/app.css"
+import { FiLogOut } from "react-icons/fi"
 
 export default function Home() {
 
     const [matches, setMatches] = useState<any[]>([])
     const navigate = useNavigate()
+
+    const logout = async () => {
+        await supabase.auth.signOut()
+        navigate("/auth")
+    }
 
     useEffect(() => {
         fetchMatches()
@@ -36,6 +42,10 @@ export default function Home() {
         <div className="container">
             <div className="content-top">
                 <h1>⚽ Football Tracker</h1>
+
+                <button className="logout-btn" onClick={logout}>
+                    <FiLogOut /> 
+                </button>
 
                 <div className="stats">
 
