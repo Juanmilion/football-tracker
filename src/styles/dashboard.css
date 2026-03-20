@@ -14,6 +14,12 @@ body {
     align-items: center;
 }
 
+@media (max-width: 600px) {
+    .dashboard {
+        padding: 20px 10px;
+    }
+}
+
 .dashboard-header {
     text-align: center;
     margin-bottom: 30px;
@@ -78,6 +84,12 @@ body {
 .form-row {
     display: flex;
     gap: 10px;
+}
+
+@media (max-width: 500px) {
+    .form-row {
+        flex-direction: column;
+    }
 }
 
 @media (max-width: 600px) {
@@ -165,10 +177,12 @@ body {
 .match-history {
     margin-top: 30px;
     overflow: auto;
+    width: 100%;
+    overflow-x: auto;
 }
 
 .match-history table {
-    min-width: 500px;
+    min-width: 600px;
     border-collapse: collapse;
 }
 
@@ -246,9 +260,16 @@ body {
     background: #1c1c1c;
     width: 100%;
     max-width: 700px;
-    height: 350px;
+    height: 300px;
     padding: 20px;
     border-radius: 10px;
+}
+
+@media (max-width: 600px) {
+    .chart-card {
+        height: 250px;
+        padding: 15px;
+    }
 }
 
 .chart-card canvas {
