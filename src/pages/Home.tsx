@@ -5,7 +5,7 @@ import FloatingButton from "../components/FloatingButton"
 import "../styles/app.css"
 import { FiLogOut } from "react-icons/fi"
 import Title from "../components/Title"
-import { calculateStats } from "../lib/stats"
+import { calculateStats, calculateRatingWithTrend } from "../lib/stats"
 import StatDisplay from "../components/StatsDisplay"
 
 export default function Home() {
@@ -42,6 +42,7 @@ export default function Home() {
     const lastMatch = matches[0]
 
     const { score, rating } = calculateStats(matches)
+    const { trend } = calculateRatingWithTrend(matches)
 
     return (
         <div className="container">
@@ -61,6 +62,11 @@ export default function Home() {
                         <h2>
                             <StatDisplay value={Number(rating)} />
                         </h2>
+                        <div className="trend">
+                            {trend > 0 && <span className="up">↑ +{trend.toFixed(1)}</span>}
+                            {trend < 0 && <span className="down">↓ {trend.toFixed(1)}</span>}
+                            {trend === 0 && <span className="same">—</span>}
+                        </div>
                     </div>
 
                 </div>

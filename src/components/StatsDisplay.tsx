@@ -4,11 +4,10 @@ export default function StatDisplay({ value }: { value: number }) {
 
     const [display, setDisplay] = useState(0)
     const ratingClass =
-        value < 4 ? "rating low"
+        value < 5 ? "rating low"
             : value < 7 ? "rating mid"
-                : value < 9 ? "rating high"
+                : value < 8.5 ? "rating good"
                     : "rating elite"
-
     useEffect(() => {
         let start = 0
 

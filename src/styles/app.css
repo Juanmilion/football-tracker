@@ -313,24 +313,28 @@ thead {
 }
 
 .rating {
-    font-size: 3rem;
+    font-size: 2.5rem;
     font-weight: bold;
-    color: var(--primary);
-
-    margin-top: 10px;
-
-    text-align: center;
+    transition: color 0.3s ease;
 }
 
+/* 🔴 malo */
 .rating.low {
     color: #ff5252;
 }
 
+/* 🟡 normal */
 .rating.mid {
-    color: #ff9800;
+    color: #ffc107;
 }
 
-.rating.high {
+/* 🔵 bueno */
+.rating.good {
+    color: #2196f3;
+}
+
+/* 🟢 top */
+.rating.elite {
     color: #00c853;
 }
 
@@ -352,4 +356,21 @@ thead {
 .player-stat p {
     font-size: 0.9rem;
     color: var(--muted);
+}
+
+.trend {
+  font-size: 0.9rem;
+  margin-top: 4px;
+}
+
+.trend .up {
+  color: #00c853;
+}
+
+.trend .down {
+  color: #ff5252;
+}
+
+.trend .same {
+  color: var(--muted);
 }

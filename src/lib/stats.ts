@@ -24,3 +24,36 @@ export function calculateStats(matches: any[]) {
         rating: Number(rating.toFixed(1))
     }
 }
+
+export function calculateRatingWithTrend(matches: any[]) {
+
+    if (matches.length === 0) {
+        return { rating: 0, trend: 0 }
+    }
+
+    const calc = (list: any[]) => {
+        let total = 0
+
+        list.forEach(m => {
+            total += m.goals + m.assists
+        })
+
+        const cpm = total / list.length
+        return Math.min(10, cpm * 1.7)
+    }
+
+    const current = calc(matches)
+
+    if (matches.length === 1) {
+        return { rating: current, trend: 0 }
+    }
+
+    const previous = calc(matches.slice(1)) // sin último partido
+
+    const trend = current - previous
+
+    return {
+        rating: Number(current.toFixed(1)),
+        trend: Number(trend.toFixed(2))
+    }
+}
