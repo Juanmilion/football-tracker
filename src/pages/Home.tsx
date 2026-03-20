@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom"
 import FloatingButton from "../components/FloatingButton"
 import "../styles/app.css"
 import { FiLogOut } from "react-icons/fi"
-import { color } from "chart.js/helpers"
 
 export default function Home() {
 
