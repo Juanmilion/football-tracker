@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { supabase } from "../lib/supabase"
 import { useNavigate } from "react-router-dom"
 import FloatingButton from "../components/FloatingButton"
-import "../styles/dashboard.css"
+import "../styles/app.css"
 
 export default function Home() {
 
