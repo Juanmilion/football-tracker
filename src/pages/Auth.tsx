@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "../styles/auth.css";
 import { supabase } from "../lib/supabase";
+import { useNavigate } from "react-router-dom";
 
 export default function Auth() {
 
@@ -9,6 +10,8 @@ export default function Auth() {
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+
+    const navigate = useNavigate()
 
     const signUp = async () => {
 
@@ -52,6 +55,8 @@ export default function Auth() {
 
         if (error) {
             setError(error.message)
+        } else {
+            navigate("/")
         }
     }
 

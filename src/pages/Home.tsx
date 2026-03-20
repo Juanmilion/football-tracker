@@ -4,6 +4,9 @@ import { useNavigate } from "react-router-dom"
 import FloatingButton from "../components/FloatingButton"
 import "../styles/app.css"
 import { FiLogOut } from "react-icons/fi"
+import Title from "../components/Title"
+import { calculateStats } from "../lib/stats"
+import StatDisplay from "../components/StatsDisplay"
 
 export default function Home() {
 
@@ -38,14 +41,29 @@ export default function Home() {
 
     const lastMatch = matches[0]
 
+    const { score, rating } = calculateStats(matches)
+
     return (
         <div className="container">
+            <Title />
             <div className="content-top">
-                <h1>⚽ Football Tracker</h1>
+                <div className="player-stats">
 
-                <button className="logout-btn" onClick={logout}>
-                    <FiLogOut />
-                </button>
+                    <div className="player-stat">
+                        <p>Score</p>
+                        <h2>
+                            <StatDisplay value={score} />
+                        </h2>
+                    </div>
+
+                    <div className="player-stat">
+                        <p>Rating</p>
+                        <h2>
+                            <StatDisplay value={Number(rating)} />
+                        </h2>
+                    </div>
+
+                </div>
 
                 <div className="stats">
 
@@ -104,9 +122,10 @@ export default function Home() {
                     </div>
                 )}
             </div>
-
-            <FloatingButton className="fab" onClick={() => navigate("/add")} />
-
+            <button className="logout-btn" onClick={logout}>
+                <FiLogOut />
+            </button>
+            <FloatingButton onClick={() => navigate("/add")} />
         </div>
     )
 }
