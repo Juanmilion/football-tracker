@@ -1,26 +1,22 @@
-// components/ProtectedRoute.tsx
 import { useEffect, useState } from "react"
 import { supabase } from "../lib/supabase"
-import { Navigate } from "react-router-dom"
+import { Navigate, Outlet } from "react-router-dom"
 
-export default function ProtectedRoute({ children }: any) {
+export default function ProtectedRoute() {
 
     const [loading, setLoading] = useState(true)
     const [user, setUser] = useState<any>(null)
 
     useEffect(() => {
-        checkUser()
+        supabase.auth.getUser().then(({ data }) => {
+            setUser(data.user)
+            setLoading(false)
+        })
     }, [])
-
-    const checkUser = async () => {
-        const { data } = await supabase.auth.getUser()
-        setUser(data.user)
-        setLoading(false)
-    }
 
     if (loading) return null
 
-    if (!user) return <Navigate to="/auth" />
+    if (!user) return <Navigate to="/auth" replace />
 
-    return children
+    return <Outlet />
 }
