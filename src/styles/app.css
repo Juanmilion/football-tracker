@@ -20,6 +20,7 @@ body {
     background: var(--bg);
     font-family: system-ui, -apple-system, sans-serif;
     color: var(--text);
+    text-align: center;
 }
 
 /* LAYOUT */
