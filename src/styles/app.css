@@ -44,6 +44,11 @@ h1 {
     padding: 16px;
 }
 
+/* LAST MATCH */
+.match-card {
+    margin-top: 15px;
+}
+
 /* STATS GRID */
 .stats-grid {
     display: grid;
@@ -131,7 +136,7 @@ thead {
     height: 250px;
     padding-bottom: 10px;
     padding-top: 10px;
-    margin-top: 10px;
+    margin-top: 15px;
 }
 
 /* FAB */
