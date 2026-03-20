@@ -54,6 +54,16 @@ export default function Home() {
                     <p>Assists</p>
                 </div>
 
+                <div className="stat-card">
+                    <h3>{totalGoals + totalAssists}</h3>
+                    <p>G/A</p>
+                </div>
+
+                <div className="stat-card">
+                    <h3>{totalMatches > 0 ? (totalGoals + totalAssists) / totalMatches : 0}</h3>
+                    <p>G/A per Match</p>
+                </div>
+
             </div>
 
             {lastMatch && (
