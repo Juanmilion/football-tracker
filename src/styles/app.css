@@ -608,15 +608,51 @@ select {
 }
 
 .card-friend button {
-        width: 100%;
-        margin-top: 10px;
-        padding: 12px;
-        border-radius: 8px;
-        border: none;
-        background: #1f2a22;
-        color: white;
+    width: 100%;
+    margin-top: 10px;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    background: #1f2a22;
+    color: white;
 }
+
 .self-label-friend {
     font-size: 0.8rem;
     color: var(--blue);
+}
+
+.btn-disabled {
+    background: #2a2a2a;
+    color: #aaa;
+}
+
+.toast {
+    position: fixed;
+    bottom: 120px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    background: var(--primary);
+    color: black;
+
+    padding: 12px 20px;
+    border-radius: 10px;
+
+    font-weight: bold;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+
+    animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
 }

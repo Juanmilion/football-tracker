@@ -7,6 +7,8 @@ export default function AddFriend() {
 
     const [currentUserId, setCurrentUserId] = useState<string | null>(null)
 
+    const [status, setStatus] = useState<"idle" | "pending" | "friend">("idle")
+
     const [search, setSearch] = useState("")
     const [result, setResult] = useState<any | null>(null)
     const [error, setError] = useState("")
@@ -24,6 +26,7 @@ export default function AddFriend() {
 
         setError("")
         setResult(null)
+        setStatus("idle")
 
         if (!search.trim()) return
 
@@ -39,6 +42,43 @@ export default function AddFriend() {
         }
 
         setResult(data)
+
+        // 🔍 comprobar relación existente
+        const { data: relation } = await supabase
+            .from("friends")
+            .select("status")
+            .or(
+                `and(user_id.eq.${currentUserId},friend_id.eq.${data.id}),and(user_id.eq.${data.id},friend_id.eq.${currentUserId})`
+            )
+            .maybeSingle()
+
+        if (relation) {
+            if (relation.status === "pending") {
+                setStatus("pending")
+            } else if (relation.status === "accepted") {
+                setStatus("friend")
+            }
+        }
+    }
+
+    const handleAddFriend = async () => {
+
+        if (!result || !currentUserId) return
+
+        const { error } = await supabase
+            .from("friends")
+            .insert({
+                user_id: currentUserId,
+                friend_id: result.id,
+                status: "pending"
+            })
+
+        if (error) {
+            setError("Error sending request")
+        } else {
+            setError("Request sent")
+            setStatus("pending")
+        }
     }
 
     return (
@@ -66,8 +106,18 @@ export default function AddFriend() {
 
                     {result.id === currentUserId ? (
                         <span className="self-label-friend">You</span>
+                    ) : status === "friend" ? (
+                        <button disabled className="btn-disabled">
+                            Friend
+                        </button>
+                    ) : status === "pending" ? (
+                        <button disabled className="btn-disabled">
+                            Pending
+                        </button>
                     ) : (
-                        <button>Add</button>
+                        <button onClick={handleAddFriend}>
+                            Add
+                        </button>
                     )}
 
                 </div>
