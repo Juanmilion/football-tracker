@@ -39,7 +39,7 @@ export default function Stats() {
         }
     }
 
-    const safeTrend = recentPerformance ? Math.max(-2, Math.min(2, recentPerformance.trend)) : 0
+    // const safeTrend = recentPerformance ? Math.max(-2, Math.min(2, recentPerformance.trend)) : 0
 
     return (
         <div className="container">
