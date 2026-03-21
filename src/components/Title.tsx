@@ -1,5 +1,5 @@
 export default function Title() {
     return (
-        <h1>⚽ Football Tracker</h1>
+        <h1 style={{ padding: "10px" }}>⚽ Football Tracker</h1>
     )
 }
