@@ -57,7 +57,7 @@ export default function AddFriend() {
                 Search
             </button>
 
-            {error && <p>{error}</p>}
+            {error && <p style={{ marginTop: "10px" }}>{error}</p>}
 
             {result && (
                 <div className="friend-result">
