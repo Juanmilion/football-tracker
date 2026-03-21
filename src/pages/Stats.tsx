@@ -48,14 +48,14 @@ export default function Stats() {
             {recentPerformance && (
                 <div className="performance">
 
-                    <div className="performance-header">
+                    {/* <div className="performance-header">
                         <h2>{recentPerformance.label}</h2>
                         <span className="safe-trend">
                             {safeTrend > 0 && `↑ +${safeTrend}`}
                             {safeTrend < 0 && `↓ ${safeTrend}`}
                             {safeTrend === 0 && "—"}
                         </span>
-                    </div>
+                    </div> */}
 
                     <div className="performance-main">
                         <div className="big-rating">
