@@ -573,3 +573,50 @@ select {
     color: black;
     font-weight: bold;
 }
+
+.friend-result {
+    margin-top: 10px;
+    padding: 12px;
+    width: 100%;
+    border-radius: 8px;
+    border: none;
+    background: var(--primary);
+    color: black;
+    font-weight: bold;
+}
+
+.self-label {
+    font-size: 0.8rem;
+    color: var(--muted);
+}
+
+.card-friend {
+    background: var(--card);
+    padding: 16px;
+    border-radius: 12px;
+    margin-top: 20px;
+}
+
+.card-friend input {
+    width: 100%;
+    margin-top: 10px;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    background: #1f2a22;
+    color: white;
+}
+
+.card-friend button {
+        width: 100%;
+        margin-top: 10px;
+        padding: 12px;
+        border-radius: 8px;
+        border: none;
+        background: #1f2a22;
+        color: white;
+}
+.self-label-friend {
+    font-size: 0.8rem;
+    color: var(--blue);
+}

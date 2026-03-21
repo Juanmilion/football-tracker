@@ -6,6 +6,7 @@ import Add from "../pages/Add"
 import Stats from "../pages/Stats"
 import Auth from "../pages/Auth"
 import Navbar from "../components/Navbar"
+import Friends from "../pages/Friends"
 import "../styles/app.css"
 
 export default function Layout() {
@@ -26,6 +27,7 @@ export default function Layout() {
           <Route path="/" element={<Home />} />
           <Route path="/add" element={<Add />} />
           <Route path="/stats" element={<Stats />} />
+          <Route path="/friends" element={<Friends />} />
         </Route>
 
       </Routes>
