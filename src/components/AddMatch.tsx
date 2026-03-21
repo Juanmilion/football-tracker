@@ -3,31 +3,30 @@ import { supabase } from "../lib/supabase"
 
 export default function AddMatch() {
 
-    const [date, setDate] = useState("")
     const [goals, setGoals] = useState(0)
     const [assists, setAssists] = useState(0)
     const [pitch, setPitch] = useState("")
-    const [message, setMessage] = useState("")
     const [pitches, setPitches] = useState<any[]>([])
+    const [message, setMessage] = useState("")
 
-    // Cargar pitches desde Supabase
     useEffect(() => {
-
-        const fetchPitches = async () => {
-
-            const { data, error } = await supabase
-                .from("pitches")
-                .select("*")
-
-            if (!error && data) {
-                setPitches(data)
-            }
-
-        }
-
         fetchPitches()
-
     }, [])
+
+    const fetchPitches = async () => {
+        const { data } = await supabase.from("pitches").select("*")
+        if (data) setPitches(data)
+
+        // 👉 cargar última pista usada
+        const lastPitch = localStorage.getItem("lastPitch")
+        if (lastPitch) setPitch(lastPitch)
+    }
+
+    const changeValue = (setter: any, value: number, delta: number) => {
+        const newValue = value + delta
+        if (newValue < 0) return
+        setter(newValue)
+    }
 
     const addMatch = async () => {
 
@@ -35,14 +34,16 @@ export default function AddMatch() {
 
         const { data: { user } } = await supabase.auth.getUser()
 
-        const userId = user?.id || null
+        if (!user) return
+
+        const today = new Date().toISOString().split("T")[0]
 
         const { error } = await supabase
             .from("matches")
             .insert({
-                user_id: userId,
+                user_id: user.id,
                 pitch_id: pitch,
-                date,
+                date: today,
                 goals,
                 assists
             })
@@ -52,96 +53,81 @@ export default function AddMatch() {
         } else {
             setMessage("Match saved ⚽")
 
-            setDate("")
+            // guardar última pista
+            localStorage.setItem("lastPitch", pitch)
+
             setGoals(0)
             setAssists(0)
-            setPitch("")
         }
     }
 
     return (
 
-        <div className="match-card">
+        <div className="add-container">
 
-            <h2>Add Match</h2>
+            {/* GOALS */}
+            <div className="counter">
+                <p>Goals</p>
 
-            <div className="form-group">
+                <div className="counter-controls">
+                    <button onClick={() => changeValue(setGoals, goals, -1)}>-</button>
 
-                <label>Date</label>
+                    <span>{goals}</span>
 
-                <input
-                    type="date"
-                    value={date}
-                    onChange={(e) => setDate(e.target.value)}
-                />
-
-            </div>
-
-            <div className="form-row">
-
-                <div className="form-group">
-
-                    <label>Goals</label>
-
-                    <input
-                        type="number"
-                        value={goals}
-                        onChange={(e) => setGoals(Number(e.target.value))}
-                    />
-
+                    <button onClick={() => changeValue(setGoals, goals, 1)}>+</button>
                 </div>
 
-                <div className="form-group">
-
-                    <label>Assists</label>
-
-                    <input
-                        type="number"
-                        value={assists}
-                        onChange={(e) => setAssists(Number(e.target.value))}
-                    />
-
+                <div className="quick-buttons">
+                    {[1, 2, 3].map(n => (
+                        <button key={n} onClick={() => setGoals(goals + n)}>
+                            +{n}
+                        </button>
+                    ))}
                 </div>
-
             </div>
 
+            {/* ASSISTS */}
+            <div className="counter">
+                <p>Assists</p>
+
+                <div className="counter-controls">
+                    <button onClick={() => changeValue(setAssists, assists, -1)}>-</button>
+
+                    <span>{assists}</span>
+
+                    <button onClick={() => changeValue(setAssists, assists, 1)}>+</button>
+                </div>
+
+                <div className="quick-buttons">
+                    {[1, 2, 3].map(n => (
+                        <button key={n} onClick={() => setAssists(assists + n)}>
+                            +{n}
+                        </button>
+                    ))}
+                </div>
+            </div>
+
+            {/* PITCH */}
             <div className="form-group">
+                <p>Pitch</p>
 
-                <label>Pitch</label>
-
-                <select
-                    value={pitch}
-                    onChange={(e) => setPitch(e.target.value)}
-                >
-
-                    <option value="">
-                        Select a pitch
-                    </option>
-
-                    {pitches.map((p) => (
+                <select value={pitch} onChange={(e) => setPitch(e.target.value)}>
+                    <option value="">Select pitch</option>
+                    {pitches.map(p => (
                         <option key={p.id} value={p.id}>
                             {p.name}
                         </option>
                     ))}
-
                 </select>
-
             </div>
 
-            <button
-                className="save-btn"
-                onClick={addMatch}
-            >
-                Save Match
+            {/* SAVE BUTTON */}
+            <button className="save-fixed" onClick={addMatch}>
+                Save Match ⚽
             </button>
 
-            {message && (
-                <p className="form-message">
-                    {message}
-                </p>
-            )}
+            {message && <p className="form-message">{message}</p>}
 
         </div>
-
     )
 }
