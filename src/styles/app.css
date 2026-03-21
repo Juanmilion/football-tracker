@@ -549,3 +549,27 @@ select {
     background: var(--primary);
     color: black;
 }
+
+.new-pitch {
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+}
+
+.new-pitch input {
+    flex: 1;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    background: #1f2a22;
+    color: white;
+}
+
+.new-pitch button {
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: none;
+    background: var(--primary);
+    color: black;
+    font-weight: bold;
+}

@@ -10,46 +10,103 @@ export default function Auth() {
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [username, setUsername] = useState("");
+
+    const [isLogin, setIsLogin] = useState(true)
+
+    const [confirmPassword, setConfirmPassword] = useState("")
 
     const navigate = useNavigate()
 
+    // 🔐 REGISTER
     const signUp = async () => {
 
         setError(null)
         setSuccess(null)
 
-        if (!email || !password) {
+        if (!email || !password || !username) {
             setError("Please fill in all fields")
             return
         }
 
-        const { error } = await supabase.auth.signUp({
+        // comprobar username único
+        const { data: existing } = await supabase
+            .from("profiles")
+            .select("id")
+            .eq("username", username)
+            .maybeSingle()
+
+        if (existing) {
+            setError("Username already taken")
+            return
+        }
+
+        const { data, error } = await supabase.auth.signUp({
             email,
             password,
         })
 
         if (error) {
             setError(error.message)
-        } else {
-            setSuccess(
-                "Account created. Please check your email to confirm your account."
-            )
+            return
         }
+
+        const user = data.user
+
+        if (!user) {
+            setError("Error creating user")
+            return
+        }
+
+
+        if (password !== confirmPassword) {
+            setError("Passwords do not match")
+            return
+        }
+
+        // 🔥 guardar profile con email (clave)
+        const { error: profileError } = await supabase
+            .from("profiles")
+            .insert({
+                id: user.id,
+                username,
+                email
+            })
+
+        if (profileError) {
+            setError("Error creating profile")
+            return
+        }
+
+        setSuccess("Account created. You can now log in.")
+        setIsLogin(true)
     }
 
-
+    // 🔐 LOGIN CON USERNAME
     const signIn = async () => {
 
         setError(null)
         setSuccess(null)
 
-        if (!email || !password) {
+        if (!username || !password) {
             setError("Please fill in all fields")
             return
         }
 
+        // buscar email por username
+        const { data, error: userError } = await supabase
+            .from("profiles")
+            .select("email")
+            .eq("username", username)
+            .single()
+
+        if (userError || !data) {
+            setError("User not found")
+            return
+        }
+
         const { error } = await supabase.auth.signInWithPassword({
-            email,
+            email: data.email,
             password,
         })
 
@@ -73,13 +130,25 @@ export default function Auth() {
                     Track your goals, assists and matches
                 </p>
 
+                {/* USERNAME */}
                 <input
                     className="auth-input"
-                    placeholder="Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
                 />
 
+                {/* EMAIL solo en register */}
+                {!isLogin && (
+                    <input
+                        className="auth-input"
+                        placeholder="Email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                    />
+                )}
+
+                {/* PASSWORD */}
                 <input
                     className="auth-input"
                     type="password"
@@ -94,6 +163,16 @@ export default function Auth() {
                     </div>
                 )}
 
+                {!isLogin && (
+                    <input
+                        className="auth-input"
+                        type="password"
+                        placeholder="Confirm password"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                    />
+                )}
+
                 {success && (
                     <div className="auth-success">
                         {success}
@@ -102,18 +181,31 @@ export default function Auth() {
 
                 <div className="auth-buttons">
 
-                    <button
-                        className="auth-btn-primary"
-                        onClick={signIn}
-                    >
-                        Login
-                    </button>
+                    {isLogin ? (
+                        <button
+                            className="auth-btn-primary"
+                            onClick={signIn}
+                        >
+                            Login
+                        </button>
+                    ) : (
+                        <button
+                            className="auth-btn-primary"
+                            onClick={signUp}
+                        >
+                            Register
+                        </button>
+                    )}
 
                     <button
                         className="auth-btn-secondary"
-                        onClick={signUp}
+                        onClick={() => {
+                            setIsLogin(!isLogin)
+                            setError(null)
+                            setSuccess(null)
+                        }}
                     >
-                        Register
+                        {isLogin ? "Create account" : "Already have an account"}
                     </button>
 
                 </div>
