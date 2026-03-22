@@ -1,6 +1,6 @@
 {
   "name": "Football Tracker",
-  "short_name": "Tracker",
+  "short_name": "Football Tracker",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0f172a",
