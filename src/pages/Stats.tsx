@@ -3,14 +3,15 @@ import Title from "../components/Title"
 import MatchHistory from "../components/MatchHistory"
 import { useEffect, useState } from "react"
 import { supabase } from "../lib/supabase"
-import { calculateInsights, getRecentPerformance } from "../lib/stats"
+import { calculateInsights } from "../lib/stats"
+import UserInfo from "../components/UserInfo"
 
 export default function Stats() {
 
     const [matches, setMatches] = useState<any[]>([])
     const insights = calculateInsights(matches)
-    const recentPerformance = getRecentPerformance(matches)
     // const averageRating = calculateAverageRating(matches)
+   
 
     useEffect(() => {
         fetchMatches()
@@ -39,34 +40,12 @@ export default function Stats() {
         }
     }
 
-    // const safeTrend = recentPerformance ? Math.max(-2, Math.min(2, recentPerformance.trend)) : 0
 
     return (
         <div className="container">
+
             <Title />
-
-            {recentPerformance && (
-                <div className="performance">
-
-                    {/* <div className="performance-header">
-                        <h2>{recentPerformance.label}</h2>
-                        <span className="safe-trend">
-                            {safeTrend > 0 && `↑ +${safeTrend}`}
-                            {safeTrend < 0 && `↓ ${safeTrend}`}
-                            {safeTrend === 0 && "—"}
-                        </span>
-                    </div> */}
-
-                    <div className="performance-main">
-                        <div className="big-rating">
-                            {recentPerformance.avg}
-                        </div>
-                    </div>
-
-                </div>
-
-            )}
-
+        <UserInfo />
             {insights && (
 
                 <div className="insights">

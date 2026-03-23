@@ -9,6 +9,7 @@ import { calculateAverageRating } from "../lib/stats"
 import { calculateMatchRating } from "../lib/stats"
 import { calculateScore } from "../lib/stats"
 import StatDisplay from "../components/StatsDisplay"
+import UserInfo from "../components/UserInfo"
 
 export default function Home() {
 
@@ -53,6 +54,7 @@ export default function Home() {
     return (
         <div className="container">
             <Title />
+            <UserInfo />
             <div className="content-top">
                 <div className="player-stats">
 
@@ -68,11 +70,6 @@ export default function Home() {
                         <h2>
                             <StatDisplay value={Number(rating)} />
                         </h2>
-                        {/* <div className="trend">
-                            {trend > 0 && <span className="up">↑ +{trend}</span>}
-                            {trend < 0 && <span className="down">↓ {trend}</span>}
-                            {trend === 0 && <span className="same">—</span>}
-                        </div> */}
                     </div>
 
                 </div>
@@ -142,9 +139,9 @@ export default function Home() {
             <button className="logout-btn" onClick={logout}>
                 <FiLogOut />
             </button>
-            
+
             <FloatingButton onClick={() => navigate("/add")} />
         </div>
-        
+
     )
 }
