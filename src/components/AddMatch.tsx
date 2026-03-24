@@ -10,6 +10,8 @@ export default function AddMatch() {
     const [message, setMessage] = useState("")
     const [showNewPitch, setShowNewPitch] = useState(false)
     const [newPitch, setNewPitch] = useState("")
+    const [animateGoals, setAnimateGoals] = useState(false)
+    const [animateAssists, setAnimateAssists] = useState(false)
 
     useEffect(() => {
         fetchPitches()
@@ -36,10 +38,19 @@ export default function AddMatch() {
         if (lastPitch) setPitch(lastPitch)
     }
 
-    const changeValue = (setter: any, value: number, delta: number) => {
+    const changeValue = (
+        setter: any,
+        value: number,
+        delta: number,
+        triggerAnim: any
+    ) => {
         const newValue = value + delta
         if (newValue < 0) return
+
         setter(newValue)
+
+        triggerAnim(true)
+        setTimeout(() => triggerAnim(false), 150)
     }
 
     // ✅ ADD PITCH CON USER + CONTROL DUPLICADOS
@@ -122,9 +133,9 @@ export default function AddMatch() {
                 <p>Goals</p>
 
                 <div className="counter-controls">
-                    <button onClick={() => changeValue(setGoals, goals, -1)}>−</button>
-                    <span>{goals}</span>
-                    <button onClick={() => changeValue(setGoals, goals, 1)}>+</button>
+                    <button onClick={() => changeValue(setGoals, goals, -1, setAnimateGoals)}>−</button>
+                    <span className={animateGoals ? "pop" : ""}>{goals}</span>
+                    <button onClick={() => changeValue(setGoals, goals, 1, setAnimateGoals)}>+</button>
                 </div>
 
                 <div className="quick-buttons">
@@ -141,9 +152,9 @@ export default function AddMatch() {
                 <p>Assists</p>
 
                 <div className="counter-controls">
-                    <button onClick={() => changeValue(setAssists, assists, -1)}>−</button>
-                    <span>{assists}</span>
-                    <button onClick={() => changeValue(setAssists, assists, 1)}>+</button>
+                    <button onClick={() => changeValue(setAssists, assists, -1, setAnimateAssists)}>−</button>
+                    <span className={animateAssists ? "pop" : ""}>{assists}</span>
+                    <button onClick={() => changeValue(setAssists, assists, 1, setAnimateAssists)}>+</button>
                 </div>
 
                 <div className="quick-buttons">
