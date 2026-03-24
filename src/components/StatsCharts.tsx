@@ -43,38 +43,6 @@ export default function StatsCharts({ data }: any) {
         totalAssists += m.assists
     })
 
-    // const goalsChart = {
-    //     labels: Object.keys(goalsPerPitch),
-    //     datasets: [
-    //         {
-    //             label: "Goals",
-    //             data: Object.values(goalsPerPitch),
-    //             backgroundColor: "#00c853"
-    //         }
-    //     ]
-    // }
-
-    // const assistsChart = {
-    //     labels: Object.keys(assistsPerPitch),
-    //     datasets: [
-    //         {
-    //             label: "Assists",
-    //             data: Object.values(assistsPerPitch),
-    //             backgroundColor: "#2962ff"
-    //         }
-    //     ]
-    // }
-
-    // const contributionChart = {
-    //     labels: ["Goals", "Assists"],
-    //     datasets: [
-    //         {
-    //             data: [totalGoals, totalAssists],
-    //             backgroundColor: ["#00c853", "#2962ff"]
-    //         }
-    //     ]
-    // }
-
     const pitchContribution: any = {}
 
     data.forEach((m: any) => {
@@ -102,7 +70,9 @@ export default function StatsCharts({ data }: any) {
         <div className="charts">
             <div className="chart-card">
                 <h3>Best Pitch Ranking</h3>
-                <Bar data={bestPitchChart} options={{ responsive: true, maintainAspectRatio: false }} />
+                <div className="chart-wrapper">
+                    <Bar data={bestPitchChart} options={{ responsive: true, maintainAspectRatio: false }} />
+                </div>
             </div>
         </div>
     )

@@ -16,9 +16,8 @@ html {
 }
 
 #root {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    width: 100%;
+    min-height: 100vh;
 }
 
 /* VARIABLES */
@@ -33,6 +32,7 @@ html {
 
 /* BASE */
 body {
+    overflow-x: hidden;
     width: 100%;
     background: var(--bg);
     font-family: system-ui, -apple-system, sans-serif;
@@ -43,6 +43,8 @@ body {
 /* LAYOUT */
 .container {
     min-height: 100vh;
+    width: 100%;
+    overflow-x: hidden;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -74,6 +76,11 @@ h1 {
     background: var(--card);
     border-radius: 14px;
     padding: 16px;
+    width: 100%;
+}
+
+.card-list, .charts {
+    width: 100%;
 }
 
 /* LAST MATCH */
@@ -768,4 +775,10 @@ select {
 
 .me-player:hover {
     transform: none;
+}
+
+.chart-wrapper {
+    position: relative;
+    width: 100%;
+    height: 200px;
 }
