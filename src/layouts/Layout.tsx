@@ -22,6 +22,8 @@ export default function Layout() {
 
       <Routes>
 
+        <Route path="/verified" element={<Verified />} />
+
         <Route path="/auth" element={<Auth />} />
 
         <Route element={<ProtectedRoute />}>
@@ -29,7 +31,6 @@ export default function Layout() {
           <Route path="/add" element={<Add />} />
           <Route path="/stats" element={<Stats />} />
           <Route path="/friends" element={<Friends />} />
-          <Route path="/verified" element={<Verified />} />
         </Route>
 
       </Routes>
