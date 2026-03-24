@@ -25,7 +25,6 @@ export default function FriendsList() {
 
     const fetchFriends = async (id: string) => {
 
-        // 🔥 relaciones aceptadas
         const { data: relations } = await supabase
             .from("friends")
             .select("user_id, friend_id")
@@ -38,12 +37,6 @@ export default function FriendsList() {
             r.user_id === id ? r.friend_id : r.user_id
         )
 
-        if (friendIds.length === 0) {
-            setFriends([])
-            return
-        }
-
-        // 🔥 usernames
         const { data: users } = await supabase
             .from("profiles")
             .select("id, username")
@@ -51,12 +44,11 @@ export default function FriendsList() {
 
         const statsMap: any = {}
 
-        // 🔥 calcular stats amigos
+        // 🔥 stats amigos
         for (const user of users || []) {
-
             const { data: matches } = await supabase
                 .from("matches")
-                .select("id, date, goals, assists")
+                .select("*")
                 .eq("user_id", user.id)
 
             const goals = matches?.reduce((s, m) => s + m.goals, 0) || 0
@@ -76,17 +68,18 @@ export default function FriendsList() {
             }
         }
 
-        // 🔥 calcular MIS stats
+        // 🔥 MIS stats
         const { data: myMatches } = await supabase
             .from("matches")
-            .select("id, date, goals, assists")
+            .select("*")
             .eq("user_id", id)
 
         const myGoals = myMatches?.reduce((s, m) => s + m.goals, 0) || 0
         const myAssists = myMatches?.reduce((s, m) => s + m.assists, 0) || 0
         const myMatchesCount = myMatches?.length || 0
 
-        setMyStats({
+        const myStatsObj = {
+            id,
             goals: myGoals,
             assists: myAssists,
             matches: myMatchesCount,
@@ -96,10 +89,19 @@ export default function FriendsList() {
                 myMatchesCount > 0
                     ? ((myGoals + myAssists) / myMatchesCount).toFixed(2)
                     : "0.00"
-        })
+        }
 
-        // 🔥 ordenar correctamente
-        const sorted = (users || []).sort((a, b) =>
+        setMyStats(myStatsObj)
+
+        // 🔥 meterme en stats
+        statsMap[id] = myStatsObj
+
+        // 🔥 añadirme a lista
+        const me = { id, username: "You" }
+        const allUsers = [...(users || []), me]
+
+        // 🔥 ordenar ranking
+        const sorted = allUsers.sort((a, b) =>
             (statsMap[b.id]?.score || 0) - (statsMap[a.id]?.score || 0)
         )
 
@@ -108,6 +110,7 @@ export default function FriendsList() {
     }
 
     const topPlayerId = friends[0]?.id
+    const myId = myStats?.id
 
     const getResult = (mine: number, theirs: number) => {
         if (mine > theirs) return { mine: "win", theirs: "lose" }
@@ -116,7 +119,6 @@ export default function FriendsList() {
     }
 
     return (
-
         <div className="card-list">
 
             <h3>Friends</h3>
@@ -125,139 +127,156 @@ export default function FriendsList() {
                 <p>No friends yet</p>
             )}
 
-            {friends.map(f => (
+            {friends.map((f, index) => {
 
-                <div
-                    key={f.id}
-                    onClick={() =>
-                        setSelectedFriend((prev: typeof selectedFriend) =>
-                            prev?.id === f.id ? null : f
-                        )
-                    }
-                    className={`friend-card ${f.id === topPlayerId ? "top-player" : ""}`}
-                >
+                const isSelected = selectedFriend?.id === f.id
+                const friendStats = stats[f.id]
 
-                    <div className="friend-header">
-                        <h4>{f.username}</h4>
+                let myWins = 0
+                let theirWins = 0
 
-                        {f.id === topPlayerId && (
-                            <span className="top-badge">🏆 TOP</span>
+                const compare = (a: number, b: number) => {
+                    if (a > b) myWins++
+                    else if (a < b) theirWins++
+                }
+
+                if (isSelected && myStats && friendStats) {
+                    compare(myStats.score, friendStats.score)
+                    compare(myStats.rating, friendStats.rating)
+                    compare(myStats.matches, friendStats.matches)
+                    compare(myStats.goals, friendStats.goals)
+                    compare(myStats.assists, friendStats.assists)
+                    compare(Number(myStats.gaPerMatch), Number(friendStats.gaPerMatch))
+                }
+
+                const getPosition = (index: number) => {
+                    if (index === 0) return ""
+                    if (index === 1) return "🥈"
+                    if (index === 2) return "🥉"
+                    return `#${index + 1}`
+                }
+
+                return (
+                    <div key={f.id}>
+
+                        <div
+                            onClick={() =>
+                                setSelectedFriend((prev: any | null) =>
+                                    prev?.id === f.id ? null : f
+                                )
+                            }
+                            className={`
+                friend-card 
+                ${f.id === topPlayerId ? "top-player" : ""}
+                ${f.id === myId ? "me-player" : ""}
+              `}
+                        >
+
+                            <div className="friend-header">
+                                <h4>
+                                    {index === 0 && <span>🏆<span className="top-badge">TOP</span></span>} {getPosition(index)} {f.id === myId ? "You" : f.username}
+                                </h4>
+
+                                <span className="friend-score">
+                                    🏆 {friendStats?.score || 0}
+                                </span>
+                            </div>
+
+                            <div className="friend-stats">
+                                <span>⭐ {friendStats?.rating || 0}</span>
+                                <span>🎮 {friendStats?.matches || 0}</span>
+                                <span>⚽ {friendStats?.goals || 0}</span>
+                                <span>🔥 {friendStats?.gaPerMatch || 0}</span>
+                            </div>
+
+                        </div>
+
+                        {isSelected && myStats && friendStats && (
+
+                            <div className="comparison-card">
+
+                                <h3>You VS {f.id === myId ? "You" : f.username}</h3>
+                                <h4>({myWins} - {theirWins})</h4>
+
+                                <div className="comparison-grid">
+
+                                    {(() => {
+                                        const r = getResult(myStats.score, friendStats.score)
+                                        return (
+                                            <div className="comparison-row">
+                                                <span className={r.mine}>{myStats.score}</span>
+                                                <span>🏆</span>
+                                                <span className={r.theirs}>{friendStats.score}</span>
+                                            </div>
+                                        )
+                                    })()}
+
+                                    {(() => {
+                                        const r = getResult(myStats.rating, friendStats.rating)
+                                        return (
+                                            <div className="comparison-row">
+                                                <span className={r.mine}>{myStats.rating}</span>
+                                                <span>⭐</span>
+                                                <span className={r.theirs}>{friendStats.rating}</span>
+                                            </div>
+                                        )
+                                    })()}
+
+                                    {(() => {
+                                        const r = getResult(myStats.matches, friendStats.matches)
+                                        return (
+                                            <div className="comparison-row">
+                                                <span className={r.mine}>{myStats.matches}</span>
+                                                <span>🎮</span>
+                                                <span className={r.theirs}>{friendStats.matches}</span>
+                                            </div>
+                                        )
+                                    })()}
+
+                                    {(() => {
+                                        const r = getResult(myStats.goals, friendStats.goals)
+                                        return (
+                                            <div className="comparison-row">
+                                                <span className={r.mine}>{myStats.goals}</span>
+                                                <span>⚽</span>
+                                                <span className={r.theirs}>{friendStats.goals}</span>
+                                            </div>
+                                        )
+                                    })()}
+
+                                    {(() => {
+                                        const r = getResult(myStats.assists, friendStats.assists)
+                                        return (
+                                            <div className="comparison-row">
+                                                <span className={r.mine}>{myStats.assists}</span>
+                                                <span>🎯</span>
+                                                <span className={r.theirs}>{friendStats.assists}</span>
+                                            </div>
+                                        )
+                                    })()}
+
+                                    {(() => {
+                                        const r = getResult(
+                                            Number(myStats.gaPerMatch),
+                                            Number(friendStats.gaPerMatch)
+                                        )
+                                        return (
+                                            <div className="comparison-row">
+                                                <span className={r.mine}>{myStats.gaPerMatch}</span>
+                                                <span>🔥</span>
+                                                <span className={r.theirs}>{friendStats.gaPerMatch}</span>
+                                            </div>
+                                        )
+                                    })()}
+
+                                </div>
+
+                            </div>
                         )}
 
-                        <span className="friend-score">
-                            🏆 {stats[f.id]?.score || 0}
-                        </span>
                     </div>
-
-                    <div className="friend-stats">
-                        <span>⭐ {stats[f.id]?.rating || 0}</span>
-                        <span>🎮 {stats[f.id]?.matches || 0}</span>
-                        <span>⚽ {stats[f.id]?.goals || 0}</span>
-                        <span>🔥 {stats[f.id]?.gaPerMatch || 0}</span>
-                    </div>
-
-                </div>
-
-            ))}
-
-            {/* 🔥 COMPARACIÓN */}
-            {selectedFriend && myStats && stats[selectedFriend.id] && (
-
-                <div className="comparison-card">
-
-                    <h3>You VS {selectedFriend.username}</h3>
-
-                    <div className="comparison-grid">
-
-                        {/* SCORE */}
-                        {(() => {
-                            const r = getResult(
-                                myStats.score,
-                                stats[selectedFriend.id].score
-                            )
-                            return (
-                                <div className="comparison-row">
-                                    <span className={r.mine}> {myStats.score}</span>
-                                    <span>🏆</span>
-                                    <span className={r.theirs}>
-                                        {stats[selectedFriend.id].score}
-                                    </span>
-                                </div>
-                            )
-                        })()}
-
-                        {/* RATING */}
-                        {(() => {
-                            const r = getResult(
-                                myStats.rating,
-                                stats[selectedFriend.id].rating
-                            )
-                            return (
-                                <div className="comparison-row">
-                                    <span className={r.mine}>{myStats.rating}</span>
-                                    <span>⭐</span>
-                                    <span className={r.theirs}>
-                                        {stats[selectedFriend.id].rating}
-                                    </span>
-                                </div>
-                            )
-                        })()}
-
-                        {/* MATCHES */}
-                        {(() => {
-                            const r = getResult(
-                                myStats.matches,
-                                stats[selectedFriend.id].matches
-                            )
-                            return (
-                                <div className="comparison-row">
-                                    <span className={r.mine}>{myStats.matches}</span>
-                                    <span>🎮</span>
-                                    <span className={r.theirs}>
-                                        {stats[selectedFriend.id].matches}
-                                    </span>
-                                </div>
-                            )
-                        })()}
-
-                        {/* GOALS */}
-                        {(() => {
-                            const r = getResult(
-                                myStats.goals,
-                                stats[selectedFriend.id].goals
-                            )
-                            return (
-                                <div className="comparison-row">
-                                    <span className={r.mine}>{myStats.goals}</span>
-                                    <span>⚽</span>
-                                    <span className={r.theirs}>
-                                        {stats[selectedFriend.id].goals}
-                                    </span>
-                                </div>
-                            )
-                        })()}
-
-                        {/* G/A */}
-                        {(() => {
-                            const r = getResult(
-                                Number(myStats.gaPerMatch),
-                                Number(stats[selectedFriend.id].gaPerMatch)
-                            )
-                            return (
-                                <div className="comparison-row">
-                                    <span className={r.mine}>{myStats.gaPerMatch}</span>
-                                    <span>🔥</span>
-                                    <span className={r.theirs}>
-                                        {stats[selectedFriend.id].gaPerMatch}
-                                    </span>
-                                </div>
-                            )
-                        })()}
-
-                    </div>
-
-                </div>
-            )}
+                )
+            })}
 
         </div>
     )

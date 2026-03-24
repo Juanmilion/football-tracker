@@ -707,6 +707,8 @@ select {
 }
 
 .top-badge {
+    margin-left: 3px;
+    margin-right: 3px;
     font-size: 0.7rem;
     color: gold;
     font-weight: bold;
@@ -718,6 +720,26 @@ select {
     align-items: center;
     text-align: center;
     font-weight: bold;
+}
+
+.comparison-card {
+    margin-top: 12px;
+    padding: 16px;
+    border-radius: 12px;
+    background: #121a14;
+    animation: fadeSlideIn 0.25s ease;
+}
+
+@keyframes fadeSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .win {
