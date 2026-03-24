@@ -122,7 +122,7 @@ export default function AddMatch() {
                 <p>Goals</p>
 
                 <div className="counter-controls">
-                    <button onClick={() => changeValue(setGoals, goals, -1)}>-</button>
+                    <button onClick={() => changeValue(setGoals, goals, -1)}>−</button>
                     <span>{goals}</span>
                     <button onClick={() => changeValue(setGoals, goals, 1)}>+</button>
                 </div>
@@ -141,7 +141,7 @@ export default function AddMatch() {
                 <p>Assists</p>
 
                 <div className="counter-controls">
-                    <button onClick={() => changeValue(setAssists, assists, -1)}>-</button>
+                    <button onClick={() => changeValue(setAssists, assists, -1)}>−</button>
                     <span>{assists}</span>
                     <button onClick={() => changeValue(setAssists, assists, 1)}>+</button>
                 </div>
