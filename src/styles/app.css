@@ -824,3 +824,21 @@ select {
         transform: scale(1);
     }
 }
+
+.counter-value {
+    font-size: 2rem;
+    font-weight: bold;
+    transition: transform 0.15s ease, color 0.15s ease;
+}
+
+/* SUBE */
+.counter-value.up {
+    color: #00e676;
+    transform: scale(1.25);
+}
+
+/* BAJA */
+.counter-value.down {
+    color: #ff5252;
+    transform: scale(1.15);
+}

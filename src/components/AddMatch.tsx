@@ -12,6 +12,8 @@ export default function AddMatch() {
     const [newPitch, setNewPitch] = useState("")
     const [animateGoals, setAnimateGoals] = useState(false)
     const [animateAssists, setAnimateAssists] = useState(false)
+    const [goalAnim, setGoalAnim] = useState<"up" | "down" | null>(null)
+    const [assistAnim, setAssistAnim] = useState<"up" | "down" | null>(null)
 
     useEffect(() => {
         fetchPitches()
@@ -42,17 +44,23 @@ export default function AddMatch() {
         setter: any,
         value: number,
         delta: number,
-        triggerAnim: any
+        setAnim: any
     ) => {
         const newValue = value + delta
         if (newValue < 0) return
 
         setter(newValue)
 
-        triggerAnim(true)
-        setTimeout(() => triggerAnim(false), 150)
-    }
+        const direction = delta > 0 ? "up" : "down"
+        setAnim(direction)
 
+        // 📳 haptic (si existe)
+        if (navigator.vibrate) {
+            navigator.vibrate(10)
+        }
+
+        setTimeout(() => setAnim(null), 180)
+    }
     // ✅ ADD PITCH CON USER + CONTROL DUPLICADOS
     const handleAddPitch = async () => {
 
@@ -133,9 +141,13 @@ export default function AddMatch() {
                 <p>Goals</p>
 
                 <div className="counter-controls">
-                    <button onClick={() => changeValue(setGoals, goals, -1, setAnimateGoals)}>−</button>
-                    <span className={animateGoals ? "pop" : ""}>{goals}</span>
-                    <button onClick={() => changeValue(setGoals, goals, 1, setAnimateGoals)}>+</button>
+                    <button onClick={() => changeValue(setGoals, goals, -1, setGoalAnim)}>−</button>
+
+                    <span className={`counter-value ${goalAnim}`}>
+                        {goals}
+                    </span>
+
+                    <button onClick={() => changeValue(setGoals, goals, 1, setGoalAnim)}>+</button>
                 </div>
 
                 <div className="quick-buttons">
@@ -152,9 +164,13 @@ export default function AddMatch() {
                 <p>Assists</p>
 
                 <div className="counter-controls">
-                    <button onClick={() => changeValue(setAssists, assists, -1, setAnimateAssists)}>−</button>
-                    <span className={animateAssists ? "pop" : ""}>{assists}</span>
-                    <button onClick={() => changeValue(setAssists, assists, 1, setAnimateAssists)}>+</button>
+                    <button onClick={() => changeValue(setAssists, assists, -1, setAssistAnim)}>−</button>
+
+                    <span className={`counter-value ${assistAnim}`}>
+                        {assists}
+                    </span>
+
+                    <button onClick={() => changeValue(setAssists, assists, 1, setAssistAnim)}>+</button>
                 </div>
 
                 <div className="quick-buttons">
