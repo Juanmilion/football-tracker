@@ -160,11 +160,13 @@ export default function FriendsList() {
                     <div key={f.id}>
 
                         <div
-                            onClick={() =>
+                            onClick={() => {
+                                if (f.id === myId) return
+
                                 setSelectedFriend((prev: any | null) =>
                                     prev?.id === f.id ? null : f
                                 )
-                            }
+                            }}
                             className={`
                 friend-card 
                 ${f.id === topPlayerId ? "top-player" : ""}
