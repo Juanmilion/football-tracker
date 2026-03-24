@@ -12,7 +12,7 @@ html,
 }
 
 html {
-    font-size: 22px;
+    font-size: 16px;
 }
 
 #root {
@@ -38,6 +38,12 @@ body {
     font-family: system-ui, -apple-system, sans-serif;
     color: var(--text);
     text-align: center;
+}
+
+input,
+select,
+textarea {
+    font-size: 16px;
 }
 
 /* LAYOUT */
@@ -79,7 +85,8 @@ h1 {
     width: 100%;
 }
 
-.card-list, .charts {
+.card-list,
+.charts {
     width: 100%;
 }
 
@@ -186,6 +193,7 @@ h1 {
 
 .form-group input,
 .form-group select {
+    font-size: 16px;
     padding: 12px;
     border-radius: 8px;
     border: none;
@@ -566,6 +574,7 @@ select {
 .new-pitch input {
     flex: 1;
     padding: 10px;
+    font-size: 16px;
     border-radius: 8px;
     border: none;
     background: #1f2a22;
@@ -610,6 +619,7 @@ select {
     padding: 12px;
     border-radius: 8px;
     border: none;
+    font-size: 16px;
     background: #1f2a22;
     color: white;
 }
