@@ -3,11 +3,13 @@ import { useNavigate } from "react-router-dom"
 import Title from "../components/Title"
 import { supabase } from "../lib/supabase"
 
-useEffect(() => {
-  supabase.auth.signOut()
-}, [])
 
 export default function Verified() {
+
+
+    useEffect(() => {
+        supabase.auth.signOut()
+    }, [])
 
     const navigate = useNavigate()
 
