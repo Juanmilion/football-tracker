@@ -10,8 +10,6 @@ export default function AddMatch() {
     const [message, setMessage] = useState("")
     const [showNewPitch, setShowNewPitch] = useState(false)
     const [newPitch, setNewPitch] = useState("")
-    const [animateGoals, setAnimateGoals] = useState(false)
-    const [animateAssists, setAnimateAssists] = useState(false)
     const [goalAnim, setGoalAnim] = useState<"up" | "down" | null>(null)
     const [assistAnim, setAssistAnim] = useState<"up" | "down" | null>(null)
 
