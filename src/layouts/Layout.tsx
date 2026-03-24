@@ -7,6 +7,7 @@ import Stats from "../pages/Stats"
 import Auth from "../pages/Auth"
 import Navbar from "../components/Navbar"
 import Friends from "../pages/Friends"
+import Verified from "../pages/Verified"
 import "../styles/app.css"
 
 export default function Layout() {
@@ -28,6 +29,7 @@ export default function Layout() {
           <Route path="/add" element={<Add />} />
           <Route path="/stats" element={<Stats />} />
           <Route path="/friends" element={<Friends />} />
+          <Route path="/verified" element={<Verified />} />
         </Route>
 
       </Routes>
