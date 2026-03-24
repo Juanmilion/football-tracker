@@ -10,6 +10,7 @@ import { calculateMatchRating } from "../lib/stats"
 import { calculateScore } from "../lib/stats"
 import StatDisplay from "../components/StatsDisplay"
 import UserInfo from "../components/UserInfo"
+import { formatMatchDate } from "../lib/date"
 
 export default function Home() {
 
@@ -111,7 +112,7 @@ export default function Home() {
 
                         <div className="last-match-header">
                             <span>Last Match</span>
-                            <span className="match-date">{lastMatch.date}</span>
+                            <span className="match-date">{formatMatchDate(lastMatch.date)}</span>
                         </div>
 
                         <div className="last-match-stats">

@@ -1,3 +1,4 @@
+import { formatMatchDate } from "../lib/date"
 import { calculateMatchRating } from "../lib/stats"
 
 export default function MatchHistory({ matches }: any) {
@@ -35,7 +36,7 @@ export default function MatchHistory({ matches }: any) {
 
                             return (
                                 <tr key={m.id}>
-                                    <td>{m.date}</td>
+                                    <td>{formatMatchDate(m.date)}</td>
                                     <td>{m.pitches?.name}</td>
                                     <td>{m.goals}</td>
                                     <td>{m.assists}</td>
