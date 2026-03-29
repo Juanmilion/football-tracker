@@ -12,6 +12,8 @@ export default function AddMatch() {
     const [newPitch, setNewPitch] = useState("")
     const [goalAnim, setGoalAnim] = useState<"up" | "down" | null>(null)
     const [assistAnim, setAssistAnim] = useState<"up" | "down" | null>(null)
+    const [goalsFor, setGoalsFor] = useState(0)
+    const [goalsAgainst, setGoalsAgainst] = useState(0)
 
     useEffect(() => {
         fetchPitches()
@@ -103,10 +105,45 @@ export default function AddMatch() {
 
         setMessage("")
 
+        if (!pitch) {
+            setMessage("Select a pitch")
+            return
+        }
+
+        if (goalsFor === 0 && (goals > 0 || assists > 0)) {
+            setMessage("Invalid: team scored 0 but you have stats")
+            return
+        }
+
+        if (goals + assists > goalsFor) {
+            setMessage("Invalid: contributions exceed team goals")
+            return
+        }
+
         const { data: { user } } = await supabase.auth.getUser()
         if (!user) return
 
         const today = new Date().toISOString().split("T")[0]
+
+        let impacto = 0
+
+        if (goalsFor > 0) {
+            impacto = (goals + assists) / goalsFor
+        }
+
+        const win = goalsFor > goalsAgainst ? 1 : 0
+
+        // score base (0 → 1 aprox)
+        let score = impacto + (win * 0.1)
+
+        // clamp para evitar locuras
+        score = Math.min(score, 1)
+
+        // escalar a 5–10 (no queremos notas bajas absurdas)
+        let rating = 5 + (score * 5)
+
+        // redondeo a 1 decimal
+        rating = Math.round(rating * 10) / 10
 
         const { error } = await supabase
             .from("matches")
@@ -115,18 +152,24 @@ export default function AddMatch() {
                 pitch_id: pitch,
                 date: today,
                 goals,
-                assists
+                assists,
+                goals_for: goalsFor,
+                goals_against: goalsAgainst,
+                rating,
+                rating_version: 2
             })
 
         if (error) {
             setMessage("Error saving match")
         } else {
-            setMessage("Match saved ⚽")
+            setMessage(`Match saved ⚽ Rating: ${rating}`)
 
             localStorage.setItem("lastPitch", pitch)
 
             setGoals(0)
             setAssists(0)
+            setGoalsFor(0)
+            setGoalsAgainst(0)
         }
     }
 
@@ -180,8 +223,72 @@ export default function AddMatch() {
                 </div>
             </div>
 
+            <div className="counter">
+
+                <p>Team Goals</p>
+
+                <div className="counter-controls">
+                    <button onClick={() => changeValue(setGoalsFor, goalsFor, -1, () => { })}>
+                        −
+                    </button>
+
+                    <input
+                        type="number"
+                        min="0"
+                        value={goalsFor}
+                        inputMode="numeric"
+                        onChange={(e) => setGoalsFor(Math.max(0, Number(e.target.value)))}
+                        className="counter-input"
+                    />
+
+                    <button onClick={() => changeValue(setGoalsFor, goalsFor, 1, () => { })}>
+                        +
+                    </button>
+                </div>
+
+                <div className="quick-buttons">
+                    {[5, 10, 15].map(n => (
+                        <button key={n} onClick={() => setGoalsFor(n)}>
+                            {n}
+                        </button>
+                    ))}
+                </div>
+            </div>
+
+            <div className="counter">
+                <p>Opponent Goals</p>
+
+                <div className="counter-controls">
+                    <button onClick={() => changeValue(setGoalsAgainst, goalsAgainst, -1, () => { })}>
+                        −
+                    </button>
+
+                    <input
+                        type="number"
+                        min="0"
+                        inputMode="numeric"
+                        value={goalsAgainst}
+                        onChange={(e) => setGoalsAgainst(Math.max(0, Number(e.target.value)))}
+                        className="counter-input"
+                    />
+
+                    <button onClick={() => changeValue(setGoalsAgainst, goalsAgainst, 1, () => { })}>
+                        +
+                    </button>
+                </div>
+                <div className="quick-buttons">
+                    {[5, 10, 15].map(n => (
+                        <button key={n} onClick={() => setGoalsAgainst(n)}>
+                            {n}
+                        </button>
+                    ))}
+                </div>
+            </div>
+
+
+
             {/* PITCH */}
-            <div className="form-group">
+            <div className="form-group" style={{ marginTop: "25px" }}>
                 <p>Pitch</p>
 
                 <select

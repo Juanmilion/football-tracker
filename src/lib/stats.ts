@@ -6,6 +6,7 @@ type Match = {
     pitches?: {
         name: string
     }
+    rating?: number
 }
 
 type Insights = {
@@ -39,16 +40,17 @@ export function calculateAverageRating(matches: Match[]) {
 }
 
 export function calculateScore(matches: Match[]) {
-    // const totalGoals = matches.reduce((sum, m) => sum + m.goals, 0)
-    // const totalAssists = matches.reduce((sum, m) => sum + m.assists, 0)
-    // 🔢 SCORE (acumulativo)
     let score = 0
 
     matches.forEach(m => {
-        score += (m.goals * 5) + (m.assists * 3)
+        const base = (m.goals * 5) + (m.assists * 3)
+
+        const ratingFactor = m.rating ? (m.rating / 10) : 1
+
+        score += base * ratingFactor
     })
 
-    return score
+    return Math.round(score)
 }
 
 export function calculateInsights(matches: Match[]): Insights | null {

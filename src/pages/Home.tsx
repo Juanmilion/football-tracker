@@ -5,12 +5,10 @@ import FloatingButton from "../components/FloatingButton"
 import "../styles/app.css"
 import { FiLogOut } from "react-icons/fi"
 import Title from "../components/Title"
-import { calculateAverageRating } from "../lib/stats"
-import { calculateMatchRating } from "../lib/stats"
-import { calculateScore } from "../lib/stats"
 import StatDisplay from "../components/StatsDisplay"
 import UserInfo from "../components/UserInfo"
 import { formatMatchDate } from "../lib/date"
+import { calculateScore } from "../lib/stats"
 
 export default function Home() {
 
@@ -32,7 +30,7 @@ export default function Home() {
 
         const { data } = await supabase
             .from("matches")
-            .select(`date, goals, assists`)
+            .select(`date, goals, assists, rating`)
             .eq("user_id", user.id)
             .order("date", { ascending: false })
 
@@ -45,17 +43,26 @@ export default function Home() {
 
     const lastMatch = matches[0]
 
-    const rating = calculateAverageRating(matches)
-    // const trend = lastMatch ? Math.round((calculateMatchRating(lastMatch.goals, lastMatch.assists) - rating) * 10) / 10 : 0
-    const lastMatchRating = lastMatch
-        ? calculateMatchRating(lastMatch.goals, lastMatch.assists)
+    // ✅ SOLO partidos con rating
+    const ratedMatches = matches.filter(m => m.rating !== null && m.rating !== undefined)
+
+    // ✅ MEDIA REAL (igual que Stats)
+    const rating = ratedMatches.length > 0
+        ? Math.round(
+            (ratedMatches.reduce((acc, m) => acc + m.rating, 0) / ratedMatches.length) * 10
+        ) / 10
         : 0
 
+    // ✅ último partido usa rating guardado
+    const lastMatchRating = lastMatch?.rating ?? "-"
+
     const score = calculateScore(matches)
+
     return (
         <div className="container">
             <Title />
             <UserInfo />
+
             <div className="content-top">
                 <div className="player-stats">
 
@@ -69,7 +76,7 @@ export default function Home() {
                     <div className="player-stat">
                         <p>Rating</p>
                         <h2>
-                            <StatDisplay value={Number(rating)} />
+                            <StatDisplay value={rating} />
                         </h2>
                     </div>
 
@@ -98,7 +105,11 @@ export default function Home() {
                     </div>
 
                     <div className="stat-card">
-                        <h3>{totalMatches > 0 ? ((totalGoals + totalAssists) / totalMatches).toFixed(2) : 0}</h3>
+                        <h3>
+                            {totalMatches > 0
+                                ? ((totalGoals + totalAssists) / totalMatches).toFixed(2)
+                                : 0}
+                        </h3>
                         <p>G/A per Match</p>
                     </div>
 
@@ -129,7 +140,9 @@ export default function Home() {
                             </div>
 
                             <div className="stat">
-                                <span className="stat-value">{lastMatchRating}</span>
+                                <span className="stat-value">
+                                    {lastMatchRating !== "-" ? Number(lastMatchRating).toFixed(1) : "-"}
+                                </span>
                                 <span className="stat-label">Rating</span>
                             </div>
                         </div>
@@ -137,12 +150,12 @@ export default function Home() {
                     </div>
                 )}
             </div>
+
             <button className="logout-btn" onClick={logout}>
                 <FiLogOut />
             </button>
 
             <FloatingButton onClick={() => navigate("/add")} />
         </div>
-
     )
 }
