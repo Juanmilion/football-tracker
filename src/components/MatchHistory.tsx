@@ -269,22 +269,22 @@ export default function MatchHistory({ matches, onDeleteMatch, onUpdateMatch }: 
 
                             <div className="edit-block">
                                 <p>Goals</p>
-                                <input type="number" value={goals} onChange={(e) => setGoals(Math.max(0, Number(e.target.value)))} />
+                                <input type="number" inputMode="numeric" value={goals} onChange={(e) => setGoals(Math.max(0, Number(e.target.value)))} />
                             </div>
 
                             <div className="edit-block">
                                 <p>Assists</p>
-                                <input type="number" value={assists} onChange={(e) => setAssists(Math.max(0, Number(e.target.value)))} />
+                                <input type="number" inputMode="numeric" value={assists} onChange={(e) => setAssists(Math.max(0, Number(e.target.value)))} />
                             </div>
 
                             <div className="edit-block">
                                 <p>Team Goals</p>
-                                <input type="number" value={goalsFor} onChange={(e) => setGoalsFor(Math.max(0, Number(e.target.value)))} />
+                                <input type="number" inputMode="numeric" value={goalsFor} onChange={(e) => setGoalsFor(Math.max(0, Number(e.target.value)))} />
                             </div>
 
                             <div className="edit-block">
                                 <p>Opponent Goals</p>
-                                <input type="number" value={goalsAgainst} onChange={(e) => setGoalsAgainst(Math.max(0, Number(e.target.value)))} />
+                                <input type="number" inputMode="numeric" value={goalsAgainst} onChange={(e) => setGoalsAgainst(Math.max(0, Number(e.target.value)))} />
                             </div>
 
                         </div>
