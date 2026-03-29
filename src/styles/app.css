@@ -28,10 +28,15 @@ html {
     --blue: #2962ff;
     --text: #e8f5e9;
     --muted: #9e9e9e;
+    --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --fast: 0.15s;
+    --normal: 0.25s;
+    --slow: 0.4s;
 }
 
 /* BASE */
 body {
+    animation: pageFade 0.4s var(--ease);
     overflow-x: hidden;
     width: 100%;
     background: var(--bg);
@@ -40,14 +45,40 @@ body {
     text-align: center;
 }
 
+@keyframes pageFade {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 input,
 select,
 textarea {
     font-size: 16px;
 }
 
+input,
+select {
+    transition:
+        box-shadow var(--fast) var(--ease),
+        background var(--normal) var(--ease);
+}
+
+input:focus,
+select:focus {
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 0 2px rgba(0, 200, 83, 0.3);
+}
+
 /* LAYOUT */
 .container {
+    animation: fadeUp 0.4s var(--ease);
     min-height: 100vh;
     width: 100%;
     overflow-x: hidden;
@@ -58,6 +89,18 @@ textarea {
     padding: 20px 16px 100px;
     max-width: 500px;
     margin: 0 auto;
+}
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .content-top {
@@ -78,6 +121,22 @@ h1 {
 }
 
 /* CARDS */
+.card,
+.insight-card,
+.friend-card,
+.card-friend {
+    transition:
+        transform var(--normal) var(--ease),
+        box-shadow var(--normal) var(--ease),
+        background var(--normal) var(--ease);
+}
+
+.card:hover,
+.friend-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
 .card {
     background: var(--card);
     border-radius: 14px;
@@ -165,6 +224,21 @@ h1 {
 }
 
 /* BUTTONS */
+button {
+    transition:
+        transform var(--fast) var(--ease),
+        box-shadow var(--fast) var(--ease),
+        background var(--normal) var(--ease);
+}
+
+button:active {
+    transform: scale(0.92);
+}
+
+button:hover {
+    filter: brightness(1.1);
+}
+
 .btn {
     padding: 14px;
     border-radius: 10px;
@@ -307,6 +381,17 @@ thead {
 /* FLOATING BUTTON */
 
 .fab {
+    transition:
+        transform var(--fast) var(--ease),
+        box-shadow var(--normal) var(--ease);
+}
+
+.fab:hover {
+    transform: translateY(-4px) scale(1.05);
+    box-shadow: 0 10px 25px rgba(0, 200, 83, 0.4);
+}
+
+.fab {
     position: fixed;
     bottom: 90px;
     right: 20px;
@@ -405,6 +490,16 @@ thead {
 }
 
 /* HEADER */
+
+.match-history tbody tr {
+    transition: background var(--normal) var(--ease),
+        transform var(--fast) var(--ease);
+}
+
+.match-history tbody tr:hover {
+    transform: scale(1.01);
+}
+
 .match-history thead {
     background: #1f2a22;
 }
@@ -496,6 +591,21 @@ thead {
 }
 
 /* COUNTERS */
+
+.counter-controls button {
+    transition:
+        transform var(--fast) var(--ease),
+        box-shadow var(--fast) var(--ease);
+}
+
+.counter-controls button:hover {
+    transform: scale(1.08);
+}
+
+.counter-controls button:active {
+    transform: scale(0.92);
+}
+
 .counter {
     margin-top: 20px;
     text-align: center;
@@ -659,6 +769,22 @@ select {
 }
 
 .toast {
+    animation: toastSlide 0.3s var(--ease);
+}
+
+@keyframes toastSlide {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+.toast {
     position: fixed;
     bottom: 120px;
     left: 50%;
@@ -693,6 +819,17 @@ select {
     background: var(--card);
     border-radius: 14px;
     padding: 16px;
+}
+
+.friend-card {
+    transition:
+        transform var(--normal) var(--ease),
+        background var(--normal) var(--ease);
+}
+
+.friend-card:hover {
+    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.05);
 }
 
 .friend-card {
@@ -904,6 +1041,37 @@ select {
 }
 
 /* overlay */
+
+.modal-overlay {
+    animation: overlayFade 0.2s ease;
+}
+
+@keyframes overlayFade {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.modal {
+    animation: modalPop 0.25s var(--ease);
+}
+
+@keyframes modalPop {
+    0% {
+        opacity: 0;
+        transform: scale(0.95) translateY(10px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -1025,6 +1193,7 @@ select {
     background: #4caf50;
     color: white;
 }
+
 .modal-btn:disabled {
     opacity: 0.6;
     cursor: not-allowed;
