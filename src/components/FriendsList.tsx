@@ -127,7 +127,7 @@ export default function FriendsList() {
 
     const topPlayerId = friends[0]?.id
     const myId = userId
-    const me = { id: myId, username: "You" }
+    // const me = { id: myId, username: "You" }
 
     const getResult = (mine: number, theirs: number) => {
         if (mine > theirs) return { mine: "win", theirs: "lose" }

@@ -20,6 +20,8 @@ export default function FriendRequests() {
         if (id) fetchRequests(id)
     }
 
+    console.log(userId)
+
     const fetchRequests = async (id: string) => {
 
         setLoading(true)
