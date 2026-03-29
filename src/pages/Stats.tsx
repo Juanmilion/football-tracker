@@ -8,6 +8,7 @@ import UserInfo from "../components/UserInfo"
 export default function Stats() {
 
     const [matches, setMatches] = useState<any[]>([])
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         fetchMatches()
@@ -16,6 +17,7 @@ export default function Stats() {
     const handleDeleteMatch = (id: string) => {
         setMatches(prev => prev.filter(m => m.id !== id))
     }
+
     const handleUpdateMatch = (id: string, updated: any) => {
         setMatches(prev =>
             prev.map(m => m.id === id ? { ...m, ...updated } : m)
@@ -23,6 +25,8 @@ export default function Stats() {
     }
 
     const fetchMatches = async () => {
+
+        setLoading(true)
 
         const { data: { user } } = await supabase.auth.getUser()
         if (!user) return
@@ -38,18 +42,21 @@ export default function Stats() {
                 goals_against,
                 rating,
                 rating_version,
+                pitch_id,
                 pitches(name)
             `)
             .eq("user_id", user.id)
             .order("date", { ascending: false })
 
+        // 🔥 pequeño delay para suavizar UX (clave)
+        await new Promise(r => setTimeout(r, 250))
+
         if (!error && data) {
             setMatches(data)
         }
-    }
 
-    // SOLO partidos con rating
-    // const ratedMatches = matches.filter(m => m.rating !== null && m.rating !== undefined)
+        setLoading(false)
+    }
 
     // ⭐ BEST MATCH
     const bestMatch = matches
@@ -59,13 +66,14 @@ export default function Stats() {
             return (b.goals + b.assists) - (a.goals + a.assists)
         })[0]
 
-    // 🔥 BEST PITCH (media + stats)
+    // 🔥 BEST PITCH
     const pitchMap: Record<string, {
         total: number,
         count: number,
         goals: number,
         assists: number
     }> = {}
+
     matches.forEach(m => {
         if (!m.rating) return
 
@@ -95,9 +103,6 @@ export default function Stats() {
             contribution: data.goals + data.assists
         }))
         .sort((a, b) => b.avg - a.avg)[0]
-    // console.log("Best Pitch:", bestPitch)
-    // console.log(matches)
-    // console.log("ratedMatches:", ratedMatches)
 
     return (
         <div className="container">
@@ -105,45 +110,67 @@ export default function Stats() {
             <Title />
             <UserInfo />
 
-            <div className="insights">
+            {/* 🔴 LOADING STATE REAL */}
+            {loading ? (
+                <div className="skeleton-container fade-in">
 
-                {/* ⭐ BEST MATCH */}
-                {bestMatch && (
-                    <div className="insight-card">
-                        <p>Best Match</p>
+                    <div className="skeleton-card"></div>
+                    <div className="skeleton-card"></div>
 
-                        <h3>
-                            ⚽ {bestMatch.goals} | 🎯 {bestMatch.assists}
-                        </h3>
+                    <div className="skeleton-card large"></div>
+                    <div className="skeleton-card large"></div>
 
-                        <span>Rating: {bestMatch.rating}</span>
+                </div>
+            ) : (
+                <div className="fade-in">
 
-                        <p>{bestMatch.pitches?.name}</p>
-                        <p>{bestMatch.date}</p>
+                    <div className="insights">
+
+                        {/* ⭐ BEST MATCH */}
+                        {bestMatch && (
+                            <div className="insight-card">
+                                <p>Best Match</p>
+
+                                <h3>
+                                    ⚽ {bestMatch.goals} | 🎯 {bestMatch.assists}
+                                </h3>
+
+                                <span>Rating: {bestMatch.rating}</span>
+
+                                <p>{bestMatch.pitches?.name}</p>
+                                <p>{bestMatch.date}</p>
+                            </div>
+                        )}
+
+                        {/* 🔥 BEST PITCH */}
+                        {bestPitch && (
+                            <div className="insight-card best">
+                                <p>Best Pitch</p>
+
+                                <h3>{bestPitch.name}</h3>
+
+                                <div className="pitch-stats">
+                                    <span>⚽ {bestPitch.goals}</span>
+                                    <span>🎯 {bestPitch.assists}</span>
+                                    <span>🔥 {bestPitch.contribution}</span>
+                                </div>
+
+                                <span>Average Rating: {bestPitch.avg.toFixed(1)}</span>
+                            </div>
+                        )}
+
                     </div>
-                )}
 
-                {/* 🔥 BEST PITCH */}
-                {bestPitch && (
-                    <div className="insight-card best">
-                        <p>Best Pitch</p>
+                    <MatchHistory
+                        matches={matches}
+                        onDeleteMatch={handleDeleteMatch}
+                        onUpdateMatch={handleUpdateMatch}
+                    />
 
-                        <h3>{bestPitch.name}</h3>
+                    <StatsCharts data={matches} />
 
-                        <div className="pitch-stats">
-                            <span>⚽ {bestPitch.goals}</span>
-                            <span>🎯 {bestPitch.assists}</span>
-                            <span>🔥 {bestPitch.contribution}</span>
-                        </div>
-
-                        <span>Average Rating: {bestPitch.avg.toFixed(1)}</span>
-                    </div>
-                )}
-
-            </div>
-
-            <MatchHistory matches={matches} onDeleteMatch={handleDeleteMatch} onUpdateMatch={handleUpdateMatch} />
-            <StatsCharts data={matches} />
+                </div>
+            )}
 
         </div>
     )

@@ -184,7 +184,7 @@ h1 {
 }
 
 .stat-value {
-    font-size: 1.8rem;
+    font-size: 2.55rem;
     font-weight: bold;
     color: var(--primary);
 }
@@ -213,14 +213,19 @@ h1 {
     text-align: center;
 }
 
-.stat-card h3 {
+.stat-card h3 span {
     font-size: 1.4rem;
-    color: var(--primary);
+    color: var(--primary) !important;
 }
 
 .stat-card p {
     font-size: 0.8rem;
     color: var(--muted);
+}
+
+.stat-value span {
+    /* font-size: 1.4rem; */
+    color: var(--primary) !important;
 }
 
 /* BUTTONS */
@@ -1231,5 +1236,102 @@ select {
     to {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+.skeleton-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.skeleton-card {
+    height: 80px;
+    border-radius: 12px;
+    background: linear-gradient(90deg,
+            #1a1f1a 25%,
+            #222a22 50%,
+            #1a1f1a 75%);
+    background-size: 200% 100%;
+    animation: skeletonLoading 1.2s infinite ease-in-out;
+}
+
+@keyframes skeletonLoading {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+.skeleton-card.small {
+    height: 50px;
+}
+
+/* 🔥 TOAST SUPERIOR TIPO APP */
+.top-toast {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    width: calc(100% - 32px);
+    max-width: 420px;
+
+    background: rgba(20, 30, 22, 0.95);
+    backdrop-filter: blur(10px);
+
+    border-radius: 14px;
+    padding: 14px 16px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+
+    z-index: 2000;
+
+    animation: slideDownFade 0.35s ease;
+}
+
+/* contenido clickable */
+.top-toast-content {
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.top-toast {
+    margin-top: 12px;
+}
+
+/* botón cerrar */
+.top-toast-close {
+    background: none;
+    border: none;
+    color: #aaa;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 4px;
+}
+
+.top-toast-close:hover {
+    color: white;
+}
+
+/* animación */
+@keyframes slideDownFade {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
     }
 }

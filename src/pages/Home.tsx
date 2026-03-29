@@ -13,6 +13,12 @@ import { calculateScore } from "../lib/stats"
 export default function Home() {
 
     const [matches, setMatches] = useState<any[]>([])
+    const [loading, setLoading] = useState(true)
+
+    // 🔥 NUEVO
+    const [pendingRequests, setPendingRequests] = useState(0)
+    const [showToast, setShowToast] = useState(false)
+
     const navigate = useNavigate()
 
     const logout = async () => {
@@ -22,9 +28,15 @@ export default function Home() {
 
     useEffect(() => {
         fetchMatches()
+        fetchPendingRequests()
     }, [])
 
+    // ---------------- MATCHES ----------------
+
     const fetchMatches = async () => {
+
+        setLoading(true)
+
         const { data: { user } } = await supabase.auth.getUser()
         if (!user) return
 
@@ -34,8 +46,42 @@ export default function Home() {
             .eq("user_id", user.id)
             .order("date", { ascending: false })
 
+        await new Promise(r => setTimeout(r, 250))
+
         if (data) setMatches(data)
+
+        setLoading(false)
     }
+
+    // ---------------- 🔥 REQUESTS ----------------
+
+    const fetchPendingRequests = async () => {
+
+        const { data: { user } } = await supabase.auth.getUser()
+        if (!user) return
+
+        const { count } = await supabase
+            .from("friends")
+            .select("*", { count: "exact", head: true })
+            .eq("friend_id", user.id)
+            .eq("status", "pending")
+
+        const total = count || 0
+
+        setPendingRequests(total)
+
+        // 🔥 solo mostrar si hay
+        if (total > 0) {
+            setShowToast(true)
+
+            // auto hide
+            setTimeout(() => {
+                setShowToast(false)
+            }, 3000)
+        }
+    }
+
+    // ---------------- STATS ----------------
 
     const totalMatches = matches.length
     const totalGoals = matches.reduce((s, m) => s + m.goals, 0)
@@ -43,23 +89,44 @@ export default function Home() {
 
     const lastMatch = matches[0]
 
-    // ✅ SOLO partidos con rating
     const ratedMatches = matches.filter(m => m.rating !== null && m.rating !== undefined)
 
-    // ✅ MEDIA REAL (igual que Stats)
     const rating = ratedMatches.length > 0
         ? Math.round(
             (ratedMatches.reduce((acc, m) => acc + m.rating, 0) / ratedMatches.length) * 10
         ) / 10
         : 0
 
-    // ✅ último partido usa rating guardado
     const lastMatchRating = lastMatch?.rating ?? "-"
 
     const score = calculateScore(matches)
 
     return (
         <div className="container">
+
+            {/* 🔥 TOAST */}
+            {showToast && (
+                <div className="top-toast">
+
+                    <div
+                        className="top-toast-content"
+                        onClick={() => navigate("/friends")}
+                    >
+                        {pendingRequests === 1
+                            ? "⚽ You have 1 friend request"
+                            : `⚽ You have ${pendingRequests} friend requests`}
+                    </div>
+
+                    <button
+                        className="top-toast-close"
+                        onClick={() => setShowToast(false)}
+                    >
+                        ✕
+                    </button>
+
+                </div>
+            )}
+
             <Title />
             <UserInfo />
 
@@ -85,30 +152,28 @@ export default function Home() {
                 <div className="stats">
 
                     <div className="stat-card">
-                        <h3>{totalMatches}</h3>
+                        <h3><StatDisplay value={totalMatches} /></h3>
                         <p>Matches</p>
                     </div>
 
                     <div className="stat-card">
-                        <h3>{totalGoals}</h3>
+                        <h3><StatDisplay value={totalGoals} /></h3>
                         <p>Goals</p>
                     </div>
 
                     <div className="stat-card">
-                        <h3>{totalAssists}</h3>
+                        <h3><StatDisplay value={totalAssists} /></h3>
                         <p>Assists</p>
                     </div>
 
                     <div className="stat-card">
-                        <h3>{totalGoals + totalAssists}</h3>
+                        <h3><StatDisplay value={totalGoals + totalAssists} /></h3>
                         <p>G/A</p>
                     </div>
 
                     <div className="stat-card">
                         <h3>
-                            {totalMatches > 0
-                                ? ((totalGoals + totalAssists) / totalMatches).toFixed(2)
-                                : 0}
+                            <StatDisplay value={totalMatches > 0 ? parseFloat(((totalGoals + totalAssists) / totalMatches).toFixed(2)) : 0} />
                         </h3>
                         <p>G/A per Match</p>
                     </div>
@@ -118,8 +183,10 @@ export default function Home() {
 
             <div className="content-middle">
 
-                {lastMatch && (
-                    <div className="card last-match">
+                {loading ? (
+                    <div className="card last-match skeleton-card fade-in" style={{ height: "120px" }} />
+                ) : lastMatch ? (
+                    <div className="card last-match fade-in">
 
                         <div className="last-match-header">
                             <span>Last Match</span>
@@ -128,14 +195,18 @@ export default function Home() {
 
                         <div className="last-match-stats">
                             <div className="stat">
-                                <span className="stat-value">{lastMatch.goals}</span>
+                                <span className="stat-value">
+                                    <StatDisplay value={lastMatch.goals} />
+                                </span>
                                 <span className="stat-label">Goals</span>
                             </div>
 
                             <div className="divider"></div>
 
                             <div className="stat">
-                                <span className="stat-value">{lastMatch.assists}</span>
+                                <span className="stat-value">
+                                    <StatDisplay value={lastMatch.assists} />
+                                </span>
                                 <span className="stat-label">Assists</span>
                             </div>
 
@@ -148,7 +219,8 @@ export default function Home() {
                         </div>
 
                     </div>
-                )}
+                ) : null}
+
             </div>
 
             <button className="logout-btn" onClick={logout}>

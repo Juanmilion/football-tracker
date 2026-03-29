@@ -6,13 +6,13 @@ export default function FriendRequests() {
     const [requests, setRequests] = useState<any[]>([])
     const [userId, setUserId] = useState<string | null>(null)
     const [toast, setToast] = useState<string | null>(null)
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         getUser()
     }, [])
 
     const getUser = async () => {
-        console.log(userId)
         const { data } = await supabase.auth.getUser()
         const id = data.user?.id || null
         setUserId(id)
@@ -22,16 +22,19 @@ export default function FriendRequests() {
 
     const fetchRequests = async (id: string) => {
 
-        // 1. traer requests
+        setLoading(true)
+
         const { data: requestsData } = await supabase
             .from("friends")
             .select("id, user_id")
             .eq("friend_id", id)
             .eq("status", "pending")
 
-        if (!requestsData) return
+        if (!requestsData) {
+            setLoading(false)
+            return
+        }
 
-        // 2. traer usernames
         const userIds = requestsData.map(r => r.user_id)
 
         const { data: users } = await supabase
@@ -39,13 +42,16 @@ export default function FriendRequests() {
             .select("id, username")
             .in("id", userIds)
 
-        // 3. merge manual
         const merged = requestsData.map(r => ({
             ...r,
             username: users?.find(u => u.id === r.user_id)?.username
         }))
 
+        // 🔥 pequeño delay para suavizar UX
+        await new Promise(r => setTimeout(r, 200))
+
         setRequests(merged)
+        setLoading(false)
     }
 
     const acceptRequest = async (requestId: string) => {
@@ -59,10 +65,8 @@ export default function FriendRequests() {
 
             setRequests(prev => prev.filter(r => r.id !== requestId))
 
-            // 🔥 mostrar mensaje
             setToast("Friend added ⚽")
 
-            // ⏳ desaparecer en 2.5s
             setTimeout(() => {
                 setToast(null)
             }, 2500)
@@ -72,6 +76,7 @@ export default function FriendRequests() {
     return (
 
         <div className="card-friend">
+
             {toast && (
                 <div className="toast">
                     {toast}
@@ -80,23 +85,31 @@ export default function FriendRequests() {
 
             <h3>Requests</h3>
 
-            {requests.length === 0 && (
-                <p>No requests</p>
-            )}
+            {/* 🔥 LOADING */}
+            {loading ? (
+                <div className="skeleton-container">
 
-            {requests.map(r => (
-
-                <div key={r.id} className="friend-result">
-
-                    <p>{r.username}</p>
-
-                    <button onClick={() => acceptRequest(r.id)}>
-                        Accept
-                    </button>
+                    <div className="skeleton-card small"></div>
+                    <div className="skeleton-card small"></div>
 
                 </div>
+            ) : requests.length === 0 ? (
+                <p>No requests</p>
+            ) : (
+                requests.map(r => (
 
-            ))}
+                    <div key={r.id} className="friend-result fade-in">
+
+                        <p>{r.username}</p>
+
+                        <button onClick={() => acceptRequest(r.id)}>
+                            Accept
+                        </button>
+
+                    </div>
+
+                ))
+            )}
 
         </div>
     )

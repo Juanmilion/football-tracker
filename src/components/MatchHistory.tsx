@@ -5,6 +5,7 @@ import { supabase } from "../lib/supabase"
 
 export default function MatchHistory({ matches, onDeleteMatch, onUpdateMatch }: any) {
 
+
     // DELETE
     const [showConfirm, setShowConfirm] = useState(false)
     const [selectedMatchId, setSelectedMatchId] = useState<string | null>(null)
@@ -45,6 +46,13 @@ export default function MatchHistory({ matches, onDeleteMatch, onUpdateMatch }: 
         if (data) setPitches(data)
     }
 
+    // 🔥 CLAVE: sincronizar pitch cuando ya hay datos
+    useEffect(() => {
+        if (editingMatch && pitches.length > 0) {
+            setPitch(String(editingMatch.pitch_id || ""))
+        }
+    }, [editingMatch, pitches])
+
     // ---------------- ADD NEW PITCH ----------------
 
     const handleAddPitch = async () => {
@@ -62,7 +70,7 @@ export default function MatchHistory({ matches, onDeleteMatch, onUpdateMatch }: 
         )
 
         if (exists) {
-            setPitch(exists.id)
+            setPitch(String(exists.id))
             setShowNewPitch(false)
             setNewPitch("")
             setAddingPitch(false)
@@ -81,7 +89,7 @@ export default function MatchHistory({ matches, onDeleteMatch, onUpdateMatch }: 
             const created = data[0]
 
             setPitches(prev => [...prev, created])
-            setPitch(created.id)
+            setPitch(String(created.id))
             setNewPitch("")
             setShowNewPitch(false)
         }
@@ -120,7 +128,9 @@ export default function MatchHistory({ matches, onDeleteMatch, onUpdateMatch }: 
         setAssists(m.assists)
         setGoalsFor(m.goals_for || 0)
         setGoalsAgainst(m.goals_against || 0)
-        setPitch(m.pitch_id || "")
+
+        // 🔥 importante: string
+        setPitch(String(m.pitch_id || ""))
     }
 
     const calculateRating = () => {
@@ -146,7 +156,7 @@ export default function MatchHistory({ matches, onDeleteMatch, onUpdateMatch }: 
         setSaving(true)
 
         const rating = calculateRating()
-        const selectedPitchObj = pitches.find(p => p.id === pitch)
+        const selectedPitchObj = pitches.find(p => String(p.id) === pitch)
 
         const { error } = await supabase
             .from("matches")
@@ -207,7 +217,7 @@ export default function MatchHistory({ matches, onDeleteMatch, onUpdateMatch }: 
 
                     <tbody>
                         {matches.map((m: any) => {
-
+                            // console.log("Match:", m)
                             const rating = m.rating
 
                             return (
@@ -269,27 +279,26 @@ export default function MatchHistory({ matches, onDeleteMatch, onUpdateMatch }: 
 
                             <div className="edit-block">
                                 <p>Goals</p>
-                                <input type="number" inputMode="numeric" value={goals} onChange={(e) => setGoals(Math.max(0, Number(e.target.value)))} />
+                                <input type="number" value={goals} onChange={(e) => setGoals(Math.max(0, Number(e.target.value)))} />
                             </div>
 
                             <div className="edit-block">
                                 <p>Assists</p>
-                                <input type="number" inputMode="numeric" value={assists} onChange={(e) => setAssists(Math.max(0, Number(e.target.value)))} />
+                                <input type="number" value={assists} onChange={(e) => setAssists(Math.max(0, Number(e.target.value)))} />
                             </div>
 
                             <div className="edit-block">
                                 <p>Team Goals</p>
-                                <input type="number" inputMode="numeric" value={goalsFor} onChange={(e) => setGoalsFor(Math.max(0, Number(e.target.value)))} />
+                                <input type="number" value={goalsFor} onChange={(e) => setGoalsFor(Math.max(0, Number(e.target.value)))} />
                             </div>
 
                             <div className="edit-block">
                                 <p>Opponent Goals</p>
-                                <input type="number" inputMode="numeric" value={goalsAgainst} onChange={(e) => setGoalsAgainst(Math.max(0, Number(e.target.value)))} />
+                                <input type="number" value={goalsAgainst} onChange={(e) => setGoalsAgainst(Math.max(0, Number(e.target.value)))} />
                             </div>
 
                         </div>
 
-                        {/* PITCH */}
                         <div className="edit-pitch">
                             <p>Pitch</p>
 
@@ -306,7 +315,7 @@ export default function MatchHistory({ matches, onDeleteMatch, onUpdateMatch }: 
                                 <option value="">Select pitch</option>
 
                                 {pitches.map(p => (
-                                    <option key={p.id} value={p.id}>
+                                    <option key={p.id} value={String(p.id)}>
                                         {p.name}
                                     </option>
                                 ))}
@@ -349,4 +358,5 @@ export default function MatchHistory({ matches, onDeleteMatch, onUpdateMatch }: 
 
         </section>
     )
+
 }
