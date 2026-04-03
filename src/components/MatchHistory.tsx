@@ -5,7 +5,6 @@ import { supabase } from "../lib/supabase"
 
 export default function MatchHistory({ matches, onDeleteMatch, onUpdateMatch }: any) {
 
-
     // DELETE
     const [showConfirm, setShowConfirm] = useState(false)
     const [selectedMatchId, setSelectedMatchId] = useState<string | null>(null)
@@ -15,7 +14,6 @@ export default function MatchHistory({ matches, onDeleteMatch, onUpdateMatch }: 
     const [goals, setGoals] = useState(0)
     const [assists, setAssists] = useState(0)
     const [goalsFor, setGoalsFor] = useState(0)
-    const [goalsAgainst, setGoalsAgainst] = useState(0)
 
     // PITCH
     const [pitch, setPitch] = useState("")
@@ -23,11 +21,11 @@ export default function MatchHistory({ matches, onDeleteMatch, onUpdateMatch }: 
     const [showNewPitch, setShowNewPitch] = useState(false)
     const [newPitch, setNewPitch] = useState("")
 
-    // UX STATES
+    // UX
     const [saving, setSaving] = useState(false)
     const [addingPitch, setAddingPitch] = useState(false)
 
-    // ---------------- FETCH PITCHES ----------------
+    // ---------------- FETCH ----------------
 
     useEffect(() => {
         fetchPitches()
@@ -46,14 +44,13 @@ export default function MatchHistory({ matches, onDeleteMatch, onUpdateMatch }: 
         if (data) setPitches(data)
     }
 
-    // 🔥 CLAVE: sincronizar pitch cuando ya hay datos
     useEffect(() => {
         if (editingMatch && pitches.length > 0) {
             setPitch(String(editingMatch.pitch_id || ""))
         }
     }, [editingMatch, pitches])
 
-    // ---------------- ADD NEW PITCH ----------------
+    // ---------------- ADD PITCH ----------------
 
     const handleAddPitch = async () => {
 
@@ -79,10 +76,7 @@ export default function MatchHistory({ matches, onDeleteMatch, onUpdateMatch }: 
 
         const { data, error } = await supabase
             .from("pitches")
-            .insert({
-                name,
-                user_id: user.id
-            })
+            .insert({ name, user_id: user.id })
             .select()
 
         if (!error && data) {
@@ -112,9 +106,7 @@ export default function MatchHistory({ matches, onDeleteMatch, onUpdateMatch }: 
             .delete()
             .eq("id", selectedMatchId)
 
-        if (!error) {
-            onDeleteMatch(selectedMatchId)
-        }
+        if (!error) onDeleteMatch(selectedMatchId)
 
         setShowConfirm(false)
         setSelectedMatchId(null)
@@ -127,27 +119,20 @@ export default function MatchHistory({ matches, onDeleteMatch, onUpdateMatch }: 
         setGoals(m.goals)
         setAssists(m.assists)
         setGoalsFor(m.goals_for || 0)
-        setGoalsAgainst(m.goals_against || 0)
-
-        // 🔥 importante: string
         setPitch(String(m.pitch_id || ""))
     }
 
     const calculateRating = () => {
-        let impacto = 0
 
-        if (goalsFor > 0) {
-            impacto = (goals + assists) / goalsFor
-        }
+        if (goalsFor === 0) return 5
 
-        const win = goalsFor > goalsAgainst ? 1 : 0
+        let impacto = (goals + assists) / goalsFor
 
-        let score = impacto + (win * 0.1)
-        score = Math.min(score, 1)
+        impacto = Math.pow(impacto, 0.8)
 
-        let rating = 5 + (score * 5)
+        let rating = 5 + (impacto * 5)
 
-        return Math.round(rating * 10) / 10
+        return Math.min(10, Math.round(rating * 10) / 10)
     }
 
     const handleUpdate = async () => {
@@ -164,7 +149,6 @@ export default function MatchHistory({ matches, onDeleteMatch, onUpdateMatch }: 
                 goals,
                 assists,
                 goals_for: goalsFor,
-                goals_against: goalsAgainst,
                 rating,
                 pitch_id: pitch
             })
@@ -175,7 +159,6 @@ export default function MatchHistory({ matches, onDeleteMatch, onUpdateMatch }: 
                 goals,
                 assists,
                 goals_for: goalsFor,
-                goals_against: goalsAgainst,
                 rating,
                 pitch_id: pitch,
                 pitches: { name: selectedPitchObj?.name || "Unknown" }
@@ -203,7 +186,6 @@ export default function MatchHistory({ matches, onDeleteMatch, onUpdateMatch }: 
 
             <div className="table-container">
                 <table>
-
                     <thead>
                         <tr>
                             <th>Date</th>
@@ -217,7 +199,7 @@ export default function MatchHistory({ matches, onDeleteMatch, onUpdateMatch }: 
 
                     <tbody>
                         {matches.map((m: any) => {
-                            // console.log("Match:", m)
+
                             const rating = m.rating
 
                             return (
@@ -244,7 +226,6 @@ export default function MatchHistory({ matches, onDeleteMatch, onUpdateMatch }: 
                             )
                         })}
                     </tbody>
-
                 </table>
             </div>
 
@@ -292,13 +273,9 @@ export default function MatchHistory({ matches, onDeleteMatch, onUpdateMatch }: 
                                 <input type="number" value={goalsFor} onChange={(e) => setGoalsFor(Math.max(0, Number(e.target.value)))} />
                             </div>
 
-                            <div className="edit-block">
-                                <p>Opponent Goals</p>
-                                <input type="number" value={goalsAgainst} onChange={(e) => setGoalsAgainst(Math.max(0, Number(e.target.value)))} />
-                            </div>
-
                         </div>
 
+                        {/* PITCH */}
                         <div className="edit-pitch">
                             <p>Pitch</p>
 
@@ -358,5 +335,4 @@ export default function MatchHistory({ matches, onDeleteMatch, onUpdateMatch }: 
 
         </section>
     )
-
 }
